@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures{
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,6 +40,11 @@ android {
 }
 
 dependencies {
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

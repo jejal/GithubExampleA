@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="green">#2C9517</color>
+    <color name="new_gray">#D4D4D4</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="gray">#E0E0E0</color>
+    <color name="shadow_gray">#BDBDBD</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- daye -->
+    <color name="daye_gray">#5D5D5D</color>
+    <color name="green_navigation">#00C853</color>
+    <color name="dark_green">#1D8B15</color>
+
+    <!-- calender -->
+    <color name="enabled_date_color">#D7D7D9</color>
+    <color name="selected_color">#F6F6F6</color>
+    <color name="calender_fab">#727272</color>
+    <color name="calender_color_red">#CD4517</color>
+    <color name="calender_color_orange">#E19F02</color>
+    <color name="calender_color_green">#14A989</color>
+    <color name="calender_color_blue">#6DA4FF</color>
+    <color name="calender_color_purple">#B07FFC</color>
+    <color name="calender_color_gray">#9EA9AD</color>
+    <color name="enabled_color">#7B7C80</color>
+    <color name="today_color">#C9EFE8</color>
 </resources>

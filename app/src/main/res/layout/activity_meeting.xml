@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_above="@id/bottom_button_bar"
+        android:paddingBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 이미지와 삐딱한 타이틀 배치 -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- 상단 이미지 -->
+                <ImageView
+                    android:id="@+id/image_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sorbet" />
+
+                <!-- 삐딱한 타이틀 -->
+                <TextView
+                    android:id="@+id/tv_event_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="370dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/green"
+                    android:paddingVertical="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="64dp"
+                    android:rotation="-6"
+                    android:text="Kicks &amp; Dreams"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <!-- 참가자 수 -->
+                <TextView
+                    android:id="@+id/tv_participants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6 / 11"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:background="@color/green"
+                    android:padding="8dp"
+                    android:rotation="10"
+                    android:layout_marginEnd="16dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="370dp" />
+            </FrameLayout>
+
+
+
+
+            <!-- 이후 뷰에만 패딩 적용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 모임 상세 정보 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📅 매주 수요일 저녁 7시~9시\n📍 서울여자대학교 운동장\n✔ 운동화(축구화), 운동복, 물병, 보호대(선택)\n💰 10,000 원"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="0dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 모임 소개 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="모임 소개"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="킥스 앤 드림스는 축구를 사랑하는 대학생 여성들이 모여 즐거움과 열정을 나누는 곳입니다. 초보자도 환영하며, 기본 드릴과 기술부터 시작해 경기 전략까지 함께 배우고 연습합니다. 매주 팀원들과 함께 땀 흘리며 팀워크와 유대감을 쌓아보세요! 정기적으로 다른 동아리와의 친선 경기 및 자체 리그도 진행되니 도전 정신을 가진 여러분을 기다립니다. 축구 실력보다 중요한 건 즐길 준비입니다!"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black" />
+
+                <!-- 모임 활동 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="모임 활동"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="연습 프로그램"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="드리블, 패스, 슛 등 기본 축구 기술 트레이닝\n미니 게임 및 포지션 연습으로 실전 감각 익히기"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="경기 프로그램"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="자체 리그: 동아리 내 팀 간 리그전 진행\n외부 친선 경기: 다른 대학 클럽 또는 지역 풋살 팀과 교류 경기"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="추가 활동"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="축구 퀴즈나 소규모 이벤트로 팀워크 강화\n시즌 종료 후 시상식(MVP, 베스트 팀플레이어 등)"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black" />
+
+                <!-- FAQ -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FAQ"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Q. 축구를 처음 해봐도 괜찮을까요?"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A. 물론입니다! 초보자를 위한 기본 트레이닝이 준비되어 있습니다."
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Q. 참가비 외에 추가 비용이 있나요?"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A. 추가 비용은 없으며, 개인 준비물만 챙겨주시면 됩니다."
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Q. 시간 맞추기 어려운 경우 어떻게 하나요?"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A. 모든 일정 참여가 필수는 아니며, 가능한 일정에만 참여하셔도 됩니다."
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="0dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 모임 후기 타이틀 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="모임 후기"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <!-- 첫 번째 후기 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="16dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:elevation="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="축구 경험이 없었지만 너무 재미있고 땀 흘리는 게 뿌듯했어요!"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <!-- 두 번째 후기 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="16dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:elevation="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="여자 친구들끼리 모여 운동하니까 더 친밀해졌어요."
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <!-- 세 번째 후기 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="16dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:elevation="4dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="몸을 움직이니까 건강도 챙길 수 있어서 좋았어요!"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="0dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 모임 상세 정보 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="모임 상세"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📅 매주 수요일 저녁 7시~9시\n📍 서울여자대학교 운동장\n✔ 운동화(축구화), 운동복, 물병, 보호대(선택)\n💰 10,000 원\n👥 6 ~ 11명"
+                    android:textSize="14sp"
+                    android:paddingTop="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="0dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 모임장 소개 타이틀 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="모임장 소개"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:textColor="@android:color/black" />
+
+                <!-- 초록 박스 배경 적용 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/green"
+                    android:layout_marginTop="8dp">
+
+                    <!-- 모임장 사진 -->
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/sorbet" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/green"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="김슈니"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="16dp"
+                            android:textColor="@android:color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="안녕하세요! 모임장 김슈니입니다. ENFP인 만큼 모임을 재미있게 이끌어가고 싶어요! 초보자 분들도 환영! 책임감 있는 모임장만 따라오세요 ~ ✌"
+                            android:textSize="14sp"
+                            android:padding="16dp"
+                            android:textColor="@android:color/white"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="0dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="16dp">
+
+                <!-- 방금 본 모임과 유사한 모임 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방금 본 모임과 유사한 모임"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@android:color/black" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- 첫 번째 카드 아이템 (이미지 + 텍스트) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp">
+
+                        <!-- 이미지 및 인원 현황 -->
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/image1"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/sorbet"/>
+
+                            <TextView
+                                android:id="@+id/people_count1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6/10"
+                                android:textSize="14sp"
+                                android:textColor="@android:color/white"
+                                android:background="@color/green"
+                                android:padding="8dp"
+                                android:layout_gravity="bottom|start"/>
+                        </FrameLayout>
+
+                        <!-- 텍스트 정보 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="아침을 깨우는 러닝 모드"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="아침마다 캠퍼스 곳곳을 달리는 이 모임은 단순한 러닝 그 이상! 러닝 초보부터 마라토너까지 모두 환영!"
+                                android:textSize="14sp"
+                                android:textColor="@android:color/black"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- 두 번째 카드 아이템 (이미지 + 텍스트) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp">
+
+                        <!-- 이미지 및 인원 현황 -->
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/image2"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/sorbet"/>
+
+                            <TextView
+                                android:id="@+id/people_count2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6/10"
+                                android:textSize="14sp"
+                                android:textColor="@android:color/white"
+                                android:background="@color/green"
+                                android:padding="8dp"
+                                android:layout_gravity="bottom|start" />
+                        </FrameLayout>
+
+                        <!-- 텍스트 정보 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="열정을 불태우는 축구 타임"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!"
+                                android:textSize="14sp"
+                                android:textColor="@android:color/black"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </GridLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- 하단 고정 버튼 바 -->
+    <LinearLayout
+        android:id="@+id/bottom_button_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:elevation="8dp">
+
+        <!-- 찜하기 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_favorite"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="6dp"
+            android:background="@null"
+            android:contentDescription="찜하기"
+            android:padding="12dp"
+            android:src="@drawable/ic_like"
+            app:tint="@color/black" />
+
+        <!-- 신청하기 버튼 -->
+        <Button
+            android:id="@+id/btn_apply"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green"
+            android:text="신청하기"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

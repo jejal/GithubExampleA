@@ -3,6 +3,58 @@
     <style name="Base.Theme.GithubExampleA" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Primary brand color. -->
+        <!--<item name="colorPrimary">@color/green_navigation</item>
+        <item name="colorPrimaryVariant">@color/green_navigation</item>-->
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Bottom navigation style -->
+        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView</item>
+    </style>
+
+    <!-- 캘린더 툴바 -->
+    <style name="Theme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+
+    <!-- 스플래시 스크린 테마 -->
+    <style name="SplashTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.GithubExampleA</item>
+    </style>
+
+    <!-- 캘린더의 날짜(Day)의 스타일 설정 -->
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 캘린더의 날짜(Day)의 스타일 설정 -->
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- 캘린더의 요일에 적용되는 스타일 -->
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- 연, 월을 표시하는 헤더에 적용되는 스타일 -->
+    <style name="CalendarWidgetHeader">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Theme.GithubExampleA" parent="Base.Theme.GithubExampleA" />
