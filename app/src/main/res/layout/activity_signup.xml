@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="회원 가입을 진행해 주세요."
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/joinInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="가입 정보 *"
+        android:textColor="@color/daye_gray"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/idInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="아이디"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background" />
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background" />
+
+    <TextView
+        android:id="@+id/etcInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="기타 정보 *"
+        android:textColor="@color/daye_gray"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/birthdayInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="생년월일"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/contactInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="연락처"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/schoolInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="학교"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/majorInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="학과 / 전공"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="8dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:backgroundTint="@color/dark_green"
+        android:textColor="@color/white"
+        android:padding="8dp" />
+
+
+</LinearLayout>

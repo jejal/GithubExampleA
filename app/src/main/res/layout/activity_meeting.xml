@@ -122,14 +122,15 @@
                     android:textColor="@android:color/black" />
 
                 <!-- 모임 활동 -->
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="모임 활동"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:text="모임 활동"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -602,7 +603,7 @@
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:padding="12dp"
+        android:padding="1dp"
         android:elevation="8dp">
 
         <!-- 찜하기 버튼 -->
@@ -611,11 +612,11 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="6dp"
+            android:layout_marginHorizontal="8dp"
             android:background="@null"
             android:contentDescription="찜하기"
             android:padding="12dp"
-            android:src="@drawable/ic_like"
+            android:src="@drawable/ic_like_blank"
             app:tint="@color/black" />
 
         <!-- 신청하기 버튼 -->
@@ -627,8 +628,10 @@
             android:backgroundTint="@color/green"
             android:text="신청하기"
             android:textColor="@android:color/white"
-            android:padding="16dp"
-            android:textSize="18sp"/>
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:layout_marginVertical="12dp"
+            android:layout_marginEnd="20dp" />
     </LinearLayout>
 
 

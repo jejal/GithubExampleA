@@ -10,6 +10,7 @@
 
     <!-- daye -->
     <color name="daye_gray">#5D5D5D</color>
+    <color name="dark_gray">#525252</color>
     <color name="green_navigation">#00C853</color>
     <color name="dark_green">#1D8B15</color>
 

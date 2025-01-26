@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:text="안녕하세요!"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -40,7 +40,7 @@
         android:background="@drawable/edit_text_background"
         android:hint="아이디"
         android:padding="16dp"
-        android:textColor="@color/light_gray" />
+        android:textColor="@color/black" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -107,9 +107,10 @@
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="로그인"
         android:backgroundTint="@color/green"
         android:textColor="@color/white"
-        android:text="로그인"
+        android:textSize="18sp"
         android:padding="8dp" />
 
 </LinearLayout>

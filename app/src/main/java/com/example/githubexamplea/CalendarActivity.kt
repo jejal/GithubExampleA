@@ -1,5 +1,6 @@
 package com.example.githubexamplea
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -72,6 +73,14 @@ class CalendarActivity : AppCompatActivity() {
         calendarView.setTitleFormatter { day ->
             val formattedMonth = String.format("%04d.%02d", day.year, day.month)
             formattedMonth
+        }
+
+        val btnNextPage = findViewById<Button>(R.id.btnNext)
+        btnNextPage.setOnClickListener {
+            // CompleteActivity로 이동
+            val intent = Intent(this, CompleteActivity::class.java)
+            intent.putExtra("TITLE", "신청하기")  // "신청하기" 값을 전달
+            startActivity(intent)
         }
 
         // 시간 선택 색상 변화

@@ -1,10 +1,13 @@
 package com.example.githubexamplea
 
 import android.content.Intent
-import android.content.SharedPreferences
+//import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.WindowInsetsController
@@ -25,7 +28,7 @@ import com.example.githubexamplea.model.HostItem
 import com.example.githubexamplea.model.RecommendedItem
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var sharedPreferences: SharedPreferences
+    //private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var activityAdapter: ActivityAdapter
     private lateinit var newMeetingsAdapter: ActivityAdapter
@@ -40,15 +43,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+        //sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        //val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
         // 자동 로그인 여부 확인
-        if (!isLoggedIn) {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-            return
-        }
+        //if (!isLoggedIn) {
+            //startActivity(Intent(this, LoginActivity::class.java))
+            //finish()
+            //return
+        //}
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 12(API 31) 이상에서는 WindowInsetsController로 상태바 설정
@@ -149,16 +152,64 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        findViewById<BottomNavigationView>(R.id.bottomNav).setOnItemSelectedListener { item ->
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        // 선택된 아이콘의 색상 설정
+        val colorStateList = resources.getColorStateList(R.color.bottom_nav_selector, null)
+        bottomNav.itemIconTintList = colorStateList
+        bottomNav.itemTextColor = colorStateList
+
+        // 초기 선택 아이템 설정 (HOME 아이콘을 초록색으로)
+        bottomNav.menu.findItem(R.id.nav_home).setIcon(R.drawable.ic_home)
+
+        bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_list -> true
-                R.id.nav_chat -> true
-                R.id.nav_favorite -> true
-                R.id.nav_profile -> true
+                R.id.nav_home -> {
+                    updateBottomNavIcons(R.id.nav_home)
+                    true
+                }
+                R.id.nav_list -> {
+                    updateBottomNavIcons(R.id.nav_list)
+                    true
+                }
+                R.id.nav_chat -> {
+                    updateBottomNavIcons(R.id.nav_chat)
+                    true
+                }
+                R.id.nav_favorite -> {
+                    updateBottomNavIcons(R.id.nav_favorite)
+                    true
+                }
+                R.id.nav_profile -> {
+                    updateBottomNavIcons(R.id.nav_profile)
+                    val intent = Intent(this, MyActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
+    }
+
+    // 네비게이션 아이콘 업데이트 함수
+    private fun updateBottomNavIcons(selectedItemId: Int) {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        val iconMap = mapOf(
+            R.id.nav_home to Pair(R.drawable.ic_home, R.drawable.ic_home_blank),
+            R.id.nav_list to Pair(R.drawable.ic_menu_blank, R.drawable.ic_menu_blank),
+            R.id.nav_chat to Pair(R.drawable.ic_like_blank, R.drawable.ic_like_blank),
+            R.id.nav_favorite to Pair(R.drawable.ic_chat_blank, R.drawable.ic_chat_blank),
+            R.id.nav_profile to Pair(R.drawable.ic_my, R.drawable.ic_my_blank)
+        )
+
+        // 모든 아이콘을 초기 상태 (비활성)로 변경
+        for ((id, icons) in iconMap) {
+            bottomNav.menu.findItem(id).setIcon(icons.second) // 비활성 아이콘
+        }
+
+        // 선택된 아이템을 활성화 상태로 변경
+        bottomNav.menu.findItem(selectedItemId).setIcon(iconMap[selectedItemId]?.first ?: return)
     }
 
     private fun loadData() {
@@ -267,7 +318,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getRecommendedData(): List<RecommendedItem> {
-        return listOf(
+        val data = listOf(
             RecommendedItem(
                 image = R.drawable.img_banner_1,
                 title = "헤이",
@@ -299,34 +350,47 @@ class MainActivity : AppCompatActivity() {
                 subtitle = "배드민턴 초급자 부터 중급자 까지!"
             )
         )
+
+        // 데이터 크기를 로그로 출력 (디버깅 목적)
+        Log.d("MainActivity", "Recommended data size: ${data.size}")
+
+        return data
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
-    private fun logoutUser() {
-        sharedPreferences.edit().apply {
-            putBoolean("isLoggedIn", false)
-            remove("username")
-            remove("password")
-            apply()
-        }
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-    }
+    //private fun logoutUser() {
+        //sharedPreferences.edit().apply {
+            //putBoolean("isLoggedIn", false)
+            //remove("username")
+            //remove("password")
+            //apply()
+        //}
+        //startActivity(Intent(this, LoginActivity::class.java))
+        //finish()
+    //}
 
     private fun applyWindowInsetsToRootView() {
         val rootView = findViewById<View>(android.R.id.content) // 최상위 레이아웃 가져오기
         ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // 기존 패딩 대신 하단 마진을 적용
             view.setPadding(
                 systemBarsInsets.left,   // 왼쪽 패딩
                 systemBarsInsets.top,    // 상태바 높이
                 systemBarsInsets.right,  // 오른쪽 패딩
-                systemBarsInsets.bottom  // 하단 네비게이션 바 높이
+                0  // 하단 패딩 대신 0으로 설정
             )
+
+            // 네비게이션 바 높이를 bottomNav에 적용
+            findViewById<BottomNavigationView>(R.id.bottomNav).apply {
+                setPadding(0, 0, 0, systemBarsInsets.bottom)
+            }
             insets
         }
     }

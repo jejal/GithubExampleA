@@ -19,7 +19,7 @@
             android:id="@+id/heartIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_like"
+            android:src="@drawable/ic_like_white"
             android:layout_gravity="end|top"
             android:layout_margin="8dp"/>
     </FrameLayout>
