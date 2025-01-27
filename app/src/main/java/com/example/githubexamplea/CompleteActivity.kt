@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -39,6 +40,16 @@ class CompleteActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back) // 커스텀 아이콘 적용
         }
+
+        // 전달된 날짜 및 시간 정보 가져오기
+        val selectedDate = intent.getStringExtra("SELECTED_DATE") ?: "날짜 선택 안됨"
+        val selectedTime = intent.getStringExtra("SELECTED_TIME")?.replace("\n", " ") ?: "선택된 시간 없음"
+
+        // TextView에 설정
+        val dateTextView = findViewById<TextView>(R.id.tvSelectedDate)
+        val timeTextView = findViewById<TextView>(R.id.tvSelectedTime)
+        dateTextView.text = "$selectedDate"
+        timeTextView.text = "$selectedTime"
 
         val btnConfirm = findViewById<Button>(R.id.btn_confirm)
         btnConfirm.setOnClickListener {

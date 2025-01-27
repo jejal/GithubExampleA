@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<RecyclerView>(R.id.rvActivities).apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             activityAdapter = ActivityAdapter(itemWidth) { activityItem ->
-                if (activityItem.image == R.drawable.img_soccer) {
+                if (activityItem.image == R.drawable.img_banner_1) {
                     val intent = Intent(this@MainActivity, MeetingActivity::class.java).apply {
                         putExtra("title", activityItem.title)
                         putExtra("description", activityItem.description)
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity() {
                 rating = "9/10"
             ),
             ActivityItem(
-                image = R.drawable.img_soccer,
+                image = R.drawable.img_banner_1,
                 title = "열정을 불태우는 축구 타임",
                 description = "매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!",
                 rating = "9/11"
@@ -298,20 +298,20 @@ class MainActivity : AppCompatActivity() {
         return listOf(
             ActivityItem(
                 image = R.drawable.img_banner_1,
-                title = "마감 임박 모임 1",
-                description = "마감 임박 모임 설명 1",
+                title = "열정을 불태우는 축구 타임",
+                description = "매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!",
                 rating = "9/10"
             ),
             ActivityItem(
-                image = R.drawable.img_soccer,
-                title = "마감 임박 모임 2",
-                description = "마감 임박 모임 설명 2",
+                image = R.drawable.img_banner_1,
+                title = "흥미진진한 야구",
+                description = "매주 경기를 통해 흥미진진한 시간을 보낼 수 있는 모임!",
                 rating = "8/10"
             ),
             ActivityItem(
-                image = R.drawable.img_soccer,
-                title = "마감 임박 모임 2",
-                description = "마감 임박 모임 설명 2",
+                image = R.drawable.img_banner_1,
+                title = "마감 임박 모임 3",
+                description = "마감 임박 모임 설명 3",
                 rating = "8/10"
             )
         )

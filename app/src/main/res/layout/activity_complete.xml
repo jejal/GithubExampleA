@@ -79,14 +79,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="날짜"
+                android:text="날짜       "
                 android:textSize="14sp"
                 android:textColor="@color/daye_gray"/>
 
             <TextView
+                android:id="@+id/tvSelectedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="       2025.03.20"
+                android:text="2025.03.20"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
@@ -103,14 +104,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="시간"
+                android:text="시간       "
                 android:textSize="14sp"
                 android:textColor="@color/daye_gray"/>
 
             <TextView
+                android:id="@+id/tvSelectedTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="       AM 10:00 초급자반"
+                android:text="AM 10:00 초급자반"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
@@ -127,14 +129,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="장소"
+                android:text="장소       "
                 android:textSize="14sp"
                 android:textColor="@color/daye_gray"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="       서울여자대학교 운동장"
+                android:text="서울여자대학교 운동장"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
@@ -151,14 +153,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="준비물"
+                android:text="준비물   "
                 android:textSize="14sp"
                 android:textColor="@color/daye_gray"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="   운동화 (축구화), 운동복, 물병, 보호대 (선택)"
+                android:text="운동화 (축구화), 운동복, 물병, 보호대 (선택)"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
         </LinearLayout>

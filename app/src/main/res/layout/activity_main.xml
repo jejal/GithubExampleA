@@ -47,7 +47,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="🏅 핫한 액티비티! 뭐가 있을까?"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -69,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="🔥 따끈따끈한 신규 모임"
+                android:text="🔥 따끈따끈한 갓 런칭한 신규 모임"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"/>
@@ -110,7 +112,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
                 android:text="📌 지금 뜨는 KEYWORDS"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -127,7 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -135,7 +138,7 @@
                         android:text="01"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/dark_green"
+                        android:textColor="@color/green"
                         android:layout_marginEnd="8dp"
                         android:paddingLeft="7dp"/>
 
@@ -153,7 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,7 +164,7 @@
                         android:text="02"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/dark_green"
+                        android:textColor="@color/green"
                         android:layout_marginEnd="8dp"
                         android:paddingLeft="7dp"/>
 
@@ -179,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -187,7 +190,7 @@
                         android:text="03"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/dark_green"
+                        android:textColor="@color/green"
                         android:layout_marginEnd="8dp"
                         android:paddingLeft="7dp"/>
 
@@ -205,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -213,7 +216,7 @@
                         android:text="04"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/dark_green"
+                        android:textColor="@color/green"
                         android:layout_marginEnd="8dp"
                         android:paddingLeft="7dp"/>
 
@@ -238,7 +241,7 @@
                         android:text="05"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/dark_green"
+                        android:textColor="@color/green"
                         android:layout_marginEnd="8dp"
                         android:paddingLeft="7dp"/>
 
@@ -257,19 +260,19 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="40dp">
+                android:layout_marginVertical="30dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@color/dark_green">
+                    android:background="@color/green">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="유니폼 세일 이벤트!"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:gravity="center"
@@ -279,10 +282,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="지금 바로 ***에서 만나 보세요!"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
                         android:gravity="center"
-                        android:padding="16dp"/>
+                        android:paddingTop="8dp"
+                        android:paddingBottom="16dp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -315,17 +319,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/img_banner_2"/>
+                            android:src="@drawable/img_banner_1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="6/10"
-                            android:textColor="@android:color/white"
-                            android:background="@color/dark_green"
-                            android:padding="4dp"
-                            android:layout_gravity="bottom|start"
-                            android:layout_margin="16dp"/>
+                            android:textColor="@color/white"
+                            android:background="@color/green"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="4dp"
+                            android:layout_gravity="bottom|start"/>
                     </FrameLayout>
 
                     <TextView
@@ -334,8 +338,9 @@
                         android:text="꾸준하게 달리는 마라톤"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_margin="16dp"/>
+                        android:textColor="@color/black"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -343,7 +348,6 @@
                         android:text="어쩌면 길게 느껴지는 마라톤. 팀원들과 함께 목표를 세우고 달리자! 성취감을 느끼고 싶은 마라톤을 사랑하는 누구나 대환영!"
                         android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:layout_marginHorizontal="16dp"
                         android:layout_marginBottom="16dp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -374,7 +378,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="16dp"
                 android:text="👍🏻 추천 모임"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -387,6 +392,74 @@
                 android:clipToPadding="false"
                 android:padding="16dp"
                 android:paddingEnd="16dp"/>
+
+            <!-- 푸터 추가 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/green"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:layout_marginTop="40dp">
+
+                <TextView
+                    android:id="@+id/footerTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ACTIFY"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/footerDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Actify는 'Act'(활동하다)와 'ify'(실행하게 하다)를 결합한 이름으로, 스포츠와 액티비티를 통한 대학생들의 역동적인 라이프스타일을 제안합니다."
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:paddingBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="32dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="이용약관   |   "
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="개인정보처리방침   |   "
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="운영정책   |   "
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="고객센터"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

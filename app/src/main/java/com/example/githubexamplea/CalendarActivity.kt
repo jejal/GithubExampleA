@@ -2,6 +2,7 @@ package com.example.githubexamplea
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -26,6 +28,9 @@ import java.util.Calendar
 import java.util.Locale
 
 class CalendarActivity : AppCompatActivity() {
+    private var selectedDate: String? = null
+    private var selectedTime: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
@@ -75,29 +80,61 @@ class CalendarActivity : AppCompatActivity() {
             formattedMonth
         }
 
-        val btnNextPage = findViewById<Button>(R.id.btnNext)
-        btnNextPage.setOnClickListener {
-            // CompleteActivity로 이동
-            val intent = Intent(this, CompleteActivity::class.java)
-            intent.putExtra("TITLE", "신청하기")  // "신청하기" 값을 전달
-            startActivity(intent)
+        // 날짜 선택 리스너 추가
+        calendarView.setOnDateChangedListener { _, date, _ ->
+            // 선택한 날짜를 "yyyy-MM-dd" 형식으로 저장
+            selectedDate = "${date.year}.${String.format("%02d", date.month)}.${String.format("%02d", date.day)}"
         }
 
-        // 시간 선택 색상 변화
+        // 모임 시간 선택
         val timeOption1 = findViewById<Button>(R.id.timeOption1)
         val timeOption2 = findViewById<Button>(R.id.timeOption2)
+        val timeOption3 = findViewById<Button>(R.id.timeOption3)
+        val timeOption4 = findViewById<Button>(R.id.timeOption4)
+        val timeOption5 = findViewById<Button>(R.id.timeOption5)
 
-        val timeButtons = listOf(timeOption1, timeOption2)
+        val timeButtons = listOf(timeOption1, timeOption2, timeOption3, timeOption4, timeOption5)
 
         for (button in timeButtons) {
             button.setOnClickListener {
-                timeButtons.forEach { it.isSelected = false }
-                button.isSelected = true
-                button.setTextColor(Color.WHITE)
+                // 클릭한 버튼의 현재 상태 확인
+                val isCurrentlySelected = button.tag as? Boolean ?: false
+
+                // 모든 버튼의 상태 초기화 (원래 흰 배경, 검은 글씨)
+                timeButtons.forEach { btn ->
+                    btn.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+                    btn.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                    btn.tag = false  // 선택 상태 초기화
+                }
+
+                // 클릭한 버튼을 선택 상태로 설정
+                if (!isCurrentlySelected) {
+                    button.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
+                    button.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+                    button.tag = true  // 선택됨 표시
+                    selectedTime = button.text.toString()
+                } else {
+                    // 다시 클릭 시 원래 상태로 되돌림
+                    button.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+                    button.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                    button.tag = false  // 선택 해제
+                    selectedTime = null
+                }
             }
         }
 
-
+        val btnNextPage = findViewById<Button>(R.id.btnNext)
+        btnNextPage.setOnClickListener {
+            if (selectedDate == null || selectedTime == null) {
+                Toast.makeText(this, "날짜와 시간을 모두 선택해 주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, CompleteActivity::class.java)
+                intent.putExtra("SELECTED_DATE", selectedDate)
+                intent.putExtra("SELECTED_TIME", selectedTime)
+                intent.putExtra("TITLE", "신청하기")  // "신청하기" 값을 전달
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
