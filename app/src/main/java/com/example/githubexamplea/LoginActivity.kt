@@ -1,7 +1,6 @@
 package com.example.githubexamplea
 
 import android.content.Intent
-//import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,17 +13,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.githubexamplea.database.DatabaseHelper
+import com.example.githubexamplea.utils.SharedPreferencesHelper
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
-    //private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 자동 로그인 체크
+        if (SharedPreferencesHelper.isLoggedIn(this)) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_login)
 
         dbHelper = DatabaseHelper(this)
-        //sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
 
         val etUsername = findViewById<EditText>(R.id.idInput)
         val etPassword = findViewById<EditText>(R.id.passwordInput)
@@ -51,16 +57,13 @@ class LoginActivity : AppCompatActivity() {
                 // 로그인 성공
                 errorText.visibility = View.GONE
 
-                // 로그인 성공 시 정보 저장
-                //sharedPreferences.edit().apply {
-                    //putBoolean("isLoggedIn", true)
-                    //putString("username", username)
-                    //putString("password", password)
-                    //apply()
-                //}
+                // 사용자 정보 저장
+                val userName = dbHelper.getUserName(username)
+                SharedPreferencesHelper.saveUserInfo(this, username, userName)
 
-                // 홈 화면으로 이동
-                startActivity(Intent(this, MainActivity::class.java))
+                // 메인 화면으로 이동
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
                 finish()
             } else {
                 // 로그인 실패

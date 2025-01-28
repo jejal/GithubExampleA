@@ -27,6 +27,7 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/textUserName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="김슈니"
@@ -36,9 +37,10 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/btnLogout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/edit_info"
+                    android:text="@string/logout"
                     android:textSize="16sp"
                     android:textColor="@color/black"/>
             </LinearLayout>

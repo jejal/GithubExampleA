@@ -147,4 +147,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             false
         }
     }
+
+    fun getUserName(id: String): String {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_USERS,
+            arrayOf(COLUMN_NAME),
+            "$COLUMN_ID = ?",
+            arrayOf(id),
+            null, null, null
+        )
+        return if (cursor.moveToFirst()) {
+            val name = cursor.getString(0)
+            cursor.close()
+            name
+        } else {
+            cursor.close()
+            "사용자"
+        }
+    }
 }

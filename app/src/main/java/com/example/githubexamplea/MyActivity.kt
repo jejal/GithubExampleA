@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.WindowInsetsController
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -16,6 +17,7 @@ import com.example.githubexamplea.adapter.MeetingAdapter
 import com.example.githubexamplea.adapter.FavoriteAdapter
 import com.example.githubexamplea.model.MeetingItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.githubexamplea.utils.SharedPreferencesHelper
 
 class MyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,20 @@ class MyActivity : AppCompatActivity() {
 
         setupBottomNavigation()
         setupRecyclerViews()
+
+        val textUserName = findViewById<TextView>(R.id.textUserName) // 사용자 이름 표시
+        val btnLogout = findViewById<TextView>(R.id.btnLogout) // 로그아웃 버튼
+
+        // 저장된 사용자 이름 가져와서 표시
+        textUserName.text = SharedPreferencesHelper.getUserName(this)
+
+        btnLogout.setOnClickListener {
+            // 사용자 정보 삭제 후 로그인 화면으로 이동
+            SharedPreferencesHelper.logout(this)
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun setupBottomNavigation() {

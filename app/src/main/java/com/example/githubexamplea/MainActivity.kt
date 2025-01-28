@@ -1,7 +1,6 @@
 package com.example.githubexamplea
 
 import android.content.Intent
-//import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,10 +25,9 @@ import com.example.githubexamplea.adapter.RecommendedAdapter
 import com.example.githubexamplea.model.ActivityItem
 import com.example.githubexamplea.model.HostItem
 import com.example.githubexamplea.model.RecommendedItem
+import com.example.githubexamplea.utils.SharedPreferencesHelper
 
 class MainActivity : AppCompatActivity() {
-    //private lateinit var sharedPreferences: SharedPreferences
-
     private lateinit var activityAdapter: ActivityAdapter
     private lateinit var newMeetingsAdapter: ActivityAdapter
     private lateinit var deadlineAdapter: ActivityAdapter
@@ -41,17 +39,16 @@ class MainActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
+
+        // 자동 로그인 체크
+        if (!SharedPreferencesHelper.isLoggedIn(this)) {
+            // 로그인 상태가 아니면 LoginActivity로 이동
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
-
-        //sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        //val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-
-        // 자동 로그인 여부 확인
-        //if (!isLoggedIn) {
-            //startActivity(Intent(this, LoginActivity::class.java))
-            //finish()
-            //return
-        //}
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 12(API 31) 이상에서는 WindowInsetsController로 상태바 설정
@@ -82,13 +79,6 @@ class MainActivity : AppCompatActivity() {
         splashScreen.setKeepOnScreenCondition {
             false  // false가 되면 스플래시 종료
         }
-
-
-        // 나중에 로그아웃 할 때 쓸거
-//        val btnLogout = findViewById<Button>(R.id.btnLogout)
-//        btnLogout.setOnClickListener {
-//            logoutUser()
-//        }
     }
 
     private fun setupRecyclerViews() {
@@ -357,22 +347,10 @@ class MainActivity : AppCompatActivity() {
         return data
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
-
-    //private fun logoutUser() {
-        //sharedPreferences.edit().apply {
-            //putBoolean("isLoggedIn", false)
-            //remove("username")
-            //remove("password")
-            //apply()
-        //}
-        //startActivity(Intent(this, LoginActivity::class.java))
-        //finish()
-    //}
 
     private fun applyWindowInsetsToRootView() {
         val rootView = findViewById<View>(android.R.id.content) // 최상위 레이아웃 가져오기

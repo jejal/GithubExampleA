@@ -12,7 +12,7 @@ import com.example.githubexamplea.model.MeetingItem
 class FavoriteAdapter(private val favoriteList: List<MeetingItem>) :
     RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
 
-    private val favoriteStatus = MutableList(favoriteList.size) { false }
+    private val favoriteStatus = MutableList(favoriteList.size) { true }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_meeting, parent, false)
