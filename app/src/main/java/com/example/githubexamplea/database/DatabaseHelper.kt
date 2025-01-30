@@ -9,7 +9,10 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "Actify.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 10
+        private const val TAG = "DatabaseHelper"
+
+        // 기존 tb_user 테이블 관련 상수
         private const val TABLE_USERS = "tb_user"
         private const val COLUMN_ID = "id"
         private const val COLUMN_PASSWORD = "password"
@@ -18,37 +21,147 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_PHONE = "phone"
         private const val COLUMN_UNIVERSITY = "university"
         private const val COLUMN_MAJOR = "major"
-        private const val TAG = "DatabaseHelper" // 로그 태그 추가
+
+        // 새로운 테이블 이름 상수
+        private const val TABLE_LEADER = "tb_leader"
+        private const val TABLE_LIKE = "tb_like"
+        private const val TABLE_CLUB = "tb_club"
+        private const val TABLE_APPLICATION = "tb_application"
+        private const val TABLE_CLUB_DETAILS = "tb_club_details"
+        private const val TABLE_REVIEW = "tb_review"
+        private const val TABLE_FAQ = "tb_faq"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        try {
-            val createTable = """
-                CREATE TABLE $TABLE_USERS (
-                    $COLUMN_ID TEXT PRIMARY KEY,
-                    $COLUMN_PASSWORD TEXT NOT NULL,
-                    $COLUMN_NAME TEXT NOT NULL,
-                    $COLUMN_BIRTHDAY TEXT NOT NULL,
-                    $COLUMN_PHONE TEXT NOT NULL,
-                    $COLUMN_UNIVERSITY TEXT NOT NULL,
-                    $COLUMN_MAJOR TEXT NOT NULL
-                )
-            """.trimIndent()
-            db.execSQL(createTable)
-            Log.d(TAG, "테이블 생성 성공")
-        } catch (e: Exception) {
-            Log.e(TAG, "테이블 생성 실패: ${e.message}")
-        }
+        createTbUser(db)
+        createTbLeader(db)
+        createTbLike(db)
+        createTbClub(db)
+        createTbApplication(db)
+        createTbClubDetails(db)
+        createTbReview(db)
+        createTbFaq(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        try {
-            db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
-            onCreate(db)
-            Log.d(TAG, "테이블 업그레이드 성공")
-        } catch (e: Exception) {
-            Log.e(TAG, "테이블 업그레이드 실패: ${e.message}")
-        }
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_LEADER")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_LIKE")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_CLUB")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_APPLICATION")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_CLUB_DETAILS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_REVIEW")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_FAQ")
+        onCreate(db)
+    }
+
+    private fun createTbUser(db: SQLiteDatabase) {
+        val createTable = """
+            CREATE TABLE $TABLE_USERS (
+                $COLUMN_ID TEXT PRIMARY KEY,
+                $COLUMN_PASSWORD TEXT NOT NULL,
+                $COLUMN_NAME TEXT NOT NULL,
+                $COLUMN_BIRTHDAY TEXT NOT NULL,
+                $COLUMN_PHONE TEXT NOT NULL,
+                $COLUMN_UNIVERSITY TEXT NOT NULL,
+                $COLUMN_MAJOR TEXT NOT NULL
+            )
+        """.trimIndent()
+        db.execSQL(createTable)
+    }
+
+    private fun createTbLeader(db: SQLiteDatabase) {
+        val createTbLeader = """
+            CREATE TABLE $TABLE_LEADER (
+                club_name TEXT PRIMARY KEY,
+                id TEXT NOT NULL,
+                leader_introduction TEXT NOT NULL,
+                club_introduction TEXT NOT NULL,
+                leader_career TEXT
+            )
+        """.trimIndent()
+        db.execSQL(createTbLeader)
+    }
+
+    private fun createTbLike(db: SQLiteDatabase) {
+        val createTbLike = """
+            CREATE TABLE $TABLE_LIKE (
+                id TEXT NOT NULL,
+                club_name TEXT NOT NULL,
+                PRIMARY KEY (id, club_name)
+            )
+        """.trimIndent()
+        db.execSQL(createTbLike)
+    }
+
+    private fun createTbClub(db: SQLiteDatabase) {
+        val createTbClub = """
+            CREATE TABLE $TABLE_CLUB (
+                club_name TEXT PRIMARY KEY,
+                short_title TEXT NOT NULL,
+                short_introduction TEXT NOT NULL,
+                date TEXT NOT NULL,
+                time TEXT NOT NULL,
+                location TEXT NOT NULL,
+                needs TEXT NOT NULL,
+                cost TEXT NOT NULL
+            )
+        """.trimIndent()
+        db.execSQL(createTbClub)
+    }
+
+    private fun createTbApplication(db: SQLiteDatabase) {
+        val createTbApplication = """
+            CREATE TABLE $TABLE_APPLICATION (
+                id TEXT NOT NULL,
+                club_name TEXT NOT NULL,
+                date TEXT NOT NULL,
+                time TEXT NOT NULL,
+                PRIMARY KEY (id, club_name, date, time)
+            )
+        """.trimIndent()
+        db.execSQL(createTbApplication)
+    }
+
+    private fun createTbClubDetails(db: SQLiteDatabase) {
+        val createTbClubDetails = """
+            CREATE TABLE $TABLE_CLUB_DETAILS (
+                club_name TEXT PRIMARY KEY,
+                club_introduction TEXT NOT NULL,
+                program_1 TEXT NOT NULL,
+                program_2 TEXT NOT NULL,
+                program_3 TEXT NOT NULL
+            )
+        """.trimIndent()
+        db.execSQL(createTbClubDetails)
+    }
+
+    private fun createTbReview(db: SQLiteDatabase) {
+        val createTbReview = """
+            CREATE TABLE $TABLE_REVIEW (
+                id TEXT NOT NULL,
+                club_name TEXT NOT NULL,
+                star REAL NOT NULL,
+                review TEXT NOT NULL,
+                time TEXT NOT NULL DEFAULT (strftime('%H:%M:%S', 'now', 'localtime')),
+                date TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d', 'now', 'localtime'))
+            )
+        """.trimIndent()
+        db.execSQL(createTbReview)
+    }
+
+    private fun createTbFaq(db: SQLiteDatabase) {
+        val createTbFaq = """
+            CREATE TABLE $TABLE_FAQ (
+                id TEXT NOT NULL,
+                club_name TEXT NOT NULL,
+                question TEXT NOT NULL,
+                answer TEXT NOT NULL,
+                time TEXT NOT NULL,
+                date TEXT NOT NULL
+            )
+        """.trimIndent()
+        db.execSQL(createTbFaq)
     }
 
     fun isTableExists(): Boolean {

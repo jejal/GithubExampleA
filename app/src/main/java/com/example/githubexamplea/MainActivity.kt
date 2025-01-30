@@ -22,6 +22,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.githubexamplea.adapter.ActivityAdapter
 import com.example.githubexamplea.adapter.HostAdapter
 import com.example.githubexamplea.adapter.RecommendedAdapter
+import com.example.githubexamplea.data.InsertApplicationExample
+import com.example.githubexamplea.data.InsertClubExample
+import com.example.githubexamplea.data.InsertFaqExample
+import com.example.githubexamplea.data.InsertLeaderExample
+import com.example.githubexamplea.data.InsertReviewExample
+import com.example.githubexamplea.insert.InsertUserExample
 import com.example.githubexamplea.model.ActivityItem
 import com.example.githubexamplea.model.HostItem
 import com.example.githubexamplea.model.RecommendedItem
@@ -49,6 +55,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
+
+
+        // tb_user 데이터 삽입
+        val inserter = InsertUserExample(this)
+        inserter.insertMultipleUsers()
+        // tb_leader 데이터 삽입
+        val leaderInserter = InsertLeaderExample(this)
+        leaderInserter.insertLeaders()
+        // tb_club, tb_club_details 데이터 삽입
+        val clubInserter = InsertClubExample(this)
+        clubInserter.insertClubsWithDetails()
+        // tb_review 데이터 삽입
+        val reviewInserter = InsertReviewExample(this)
+        reviewInserter.insertSampleReviews()
+        // tb_faq 데이터 삽입
+        val faqInserter = InsertFaqExample(this)
+        faqInserter.insertSampleFaqs()
+        // tb_application 데이터 삽입
+        val appInserter = InsertApplicationExample(this)
+        appInserter.insertSampleApplications()
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 12(API 31) 이상에서는 WindowInsetsController로 상태바 설정
