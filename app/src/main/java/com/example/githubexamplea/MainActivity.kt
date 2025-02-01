@@ -1,6 +1,7 @@
 package com.example.githubexamplea
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,8 @@ import android.view.Menu
 import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -18,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.githubexamplea.adapter.ActivityAdapter
 import com.example.githubexamplea.adapter.HostAdapter
@@ -27,11 +31,13 @@ import com.example.githubexamplea.data.InsertClubExample
 import com.example.githubexamplea.data.InsertFaqExample
 import com.example.githubexamplea.data.InsertLeaderExample
 import com.example.githubexamplea.data.InsertReviewExample
-import com.example.githubexamplea.insert.InsertUserExample
+import com.example.githubexamplea.data.InsertUserExample
+import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.model.ActivityItem
 import com.example.githubexamplea.model.HostItem
 import com.example.githubexamplea.model.RecommendedItem
 import com.example.githubexamplea.utils.SharedPreferencesHelper
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityAdapter: ActivityAdapter
@@ -55,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
-
 
         // tb_user 데이터 삽입
         val inserter = InsertUserExample(this)
@@ -115,23 +120,10 @@ class MainActivity : AppCompatActivity() {
         val itemWidth = (screenWidth - 48) / 2 // 패딩값을 고려하여 2등분
 
         // 액티비티 리사이클러뷰 설정
-//        findViewById<RecyclerView>(R.id.rvActivities).apply {
-//            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-//            activityAdapter = ActivityAdapter(itemWidth)
-//            adapter = activityAdapter
-//        }
         findViewById<RecyclerView>(R.id.rvActivities).apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-            activityAdapter = ActivityAdapter(itemWidth) { activityItem ->
-                if (activityItem.image == R.drawable.img_banner_1) {
-                    val intent = Intent(this@MainActivity, MeetingActivity::class.java).apply {
-                        putExtra("title", activityItem.title)
-                        putExtra("description", activityItem.description)
-                        putExtra("image", activityItem.image)
-                        putExtra("rating", activityItem.rating)
-                    }
-                    startActivity(intent)
-                }
+            activityAdapter = ActivityAdapter(itemWidth) { item ->
+                navigateToMeetingActivity(item)
             }
             adapter = activityAdapter
         }
@@ -139,7 +131,9 @@ class MainActivity : AppCompatActivity() {
         // 신규 모임 리사이클러뷰 설정
         findViewById<RecyclerView>(R.id.rvNewMeetings).apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-            newMeetingsAdapter = ActivityAdapter(itemWidth) { _ -> }
+            newMeetingsAdapter = ActivityAdapter(itemWidth) { item ->
+                navigateToMeetingActivity(item)
+            }
             adapter = newMeetingsAdapter
         }
 
@@ -153,7 +147,9 @@ class MainActivity : AppCompatActivity() {
         // 마감 임박 리사이클러뷰 설정
         findViewById<RecyclerView>(R.id.rvDeadline).apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-            deadlineAdapter = ActivityAdapter(itemWidth) { _ -> }
+            deadlineAdapter = ActivityAdapter(itemWidth) { item ->
+                navigateToMeetingActivity(item)
+            }
             adapter = deadlineAdapter
         }
 
@@ -165,6 +161,18 @@ class MainActivity : AppCompatActivity() {
             this.layoutManager = layoutManager
             recommendedAdapter = RecommendedAdapter()
             adapter = recommendedAdapter
+        }
+    }
+
+    private fun navigateToMeetingActivity(item: ActivityItem) {
+        val allowedClubs = listOf("Kicks & Dreams", "Hit & Hustle", "Breathe")
+
+        if (allowedClubs.contains(item.clubName)) {
+            val intent = Intent(this, MeetingActivity::class.java).apply {
+                putExtra("club_name", item.clubName)
+                putExtra("image", item.image)
+            }
+            startActivity(intent)
         }
     }
 
@@ -230,148 +238,180 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        activityAdapter.submitList(getActivityData())
-        newMeetingsAdapter.submitList(getNewMeetingsData())
-        hostAdapter.submitList(getHostData())
-        deadlineAdapter.submitList(getDeadlineData())
-        recommendedAdapter.submitList(getRecommendedData())
+        val dbHelper = DatabaseHelper(this)
+
+        activityAdapter.submitList(getActivityData(dbHelper))
+        newMeetingsAdapter.submitList(getNewMeetingsData(dbHelper))
+        hostAdapter.submitList(getHostData(dbHelper))
+        deadlineAdapter.submitList(getDeadlineData(dbHelper))
+        recommendedAdapter.submitList(getRecommendedData(dbHelper))
+        applyHighRunnerData(dbHelper)
     }
 
-    private fun getActivityData(): List<ActivityItem> {
-        return listOf(
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "아침을 깨우는 러닝 모드",
-                description = "아침마다 캠퍼스 곳곳을 달리는 이 모임은 단순한 러닝 그 이상! 러닝 초보부터 마라토너까지 모두 환영!",
-                rating = "9/10"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "열정을 불태우는 축구 타임",
-                description = "매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!",
-                rating = "9/11"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "테니스 가보자",
-                description = "월 2회 등산 모임",
-                rating = "7/12"
-            )
+    private fun getActivityData(db: DatabaseHelper): List<ActivityItem> {
+        val list = mutableListOf<ActivityItem>()
+        val cursor = db.readableDatabase.rawQuery("SELECT club_name, short_title, short_introduction, photo_path FROM tb_club", null)
+
+        while (cursor.moveToNext()) {
+            val clubName = cursor.getString(0)
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+            val imagePath = cursor.getString(3) ?: ""
+
+            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: 6", clubName = clubName))
+        }
+
+        cursor.close()
+        return list
+    }
+
+    private fun getNewMeetingsData(db: DatabaseHelper): List<ActivityItem> {
+        val list = mutableListOf<ActivityItem>()
+        val cursor = db.readableDatabase.rawQuery(
+            "SELECT club_name, short_title, short_introduction, photo_path FROM tb_club ORDER BY rowid DESC LIMIT 4", null)
+
+        while (cursor.moveToNext()) {
+            val clubName = cursor.getString(0)
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+            val imagePath = cursor.getString(3) ?: ""
+
+            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: 6", clubName = clubName))
+        }
+
+        cursor.close()
+        return list
+    }
+
+    private fun getHostData(db: DatabaseHelper): List<HostItem> {
+        val dbInstance = db.readableDatabase
+        val hostList = mutableListOf<HostItem>()
+
+        val cursor = dbInstance.rawQuery(
+            """
+        SELECT leader.club_name, leader.id, user.name, leader.leader_introduction, leader.club_introduction, 
+               leader.leader_career, leader.leader_photo_path
+        FROM tb_leader AS leader
+        JOIN tb_user AS user ON leader.id = user.id
+        WHERE leader.id IN ('miso', 'future', 'jun')
+        ORDER BY 
+            CASE leader.id
+                WHEN 'miso' THEN 1
+                WHEN 'future' THEN 2
+                WHEN 'jun' THEN 3
+            END
+        """.trimIndent(), null
         )
-    }
 
-    private fun getNewMeetingsData(): List<ActivityItem> {
-        return listOf(
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "마음을 다스리는 요가 타임",
-                description = "차분하게 정리하는 시간! 개운한 몸 뿐만 아니라 평안한 마음까지 얻게 되는!",
-                rating = "6/10"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "건강한 삶의 시작 수영",
-                description = "초보자도 대환영! 기초부터 심화까지 자세하게! 행복한 취미 생활 뿐만 아니라 건강한 삶까지 얻을 수 있는 모임",
-                rating = "8/10"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "농구 동호회",
-                description = "아침 수영으로 하루를 시작해요",
-                rating = "7/10"
-            )
-        )
-    }
+        while (cursor.moveToNext()) {
+            val clubName = cursor.getString(0)
+            val id = cursor.getString(1)
+            val userName = cursor.getString(2) // 유저의 한국어 이름 가져오기
+            val intro = cursor.getString(3)
+            val description = cursor.getString(4)
+            val career = cursor.getString(5) ?: "정보 없음"
+            val imagePath = cursor.getString(6) ?: ""
 
-    private fun getHostData(): List<HostItem> {
-        return listOf(
-            HostItem(
-                image = R.drawable.profile_person_1,
-                name = "김미소",
-                intro = "안녕하세요.\nKicks & Dreams의 \n모임장 김미소 입니다.",
-                description = "축구를 사랑하는 사람들의 모임",
-                infos = listOf(
-                    "Kicks & Dreams 모임장",
-                    "Happy Soccer 모임장",
-                    "나이키 마케터"
+            val careerList = career.split("/").map { it.trim() }
+
+            hostList.add(
+                HostItem(
+                    image = imagePath,
+                    name = userName, // 한국어 이름을 `name`으로 저장!
+                    intro = intro,
+                    description = description,
+                    infos = careerList
                 )
-            ),
-            HostItem(
-                image = R.drawable.profile_person_1,
-                name = "이하늘",
-                intro = "Running Crew의 모임장 \n이하늘 입니다.",
-                description = "함께 달리며 건강한 삶을 만들어가요",
-                infos = listOf(
-                    "Running Crew 모임장",
-                    "Marathon Club 운영진",
-                    "체육 교육 전공"
-                )
             )
+        }
+        cursor.close()
+
+        return hostList
+    }
+
+    private fun getHighRunnerData(db: DatabaseHelper): InsertClubExample.ClubData? {
+        val cursor = db.readableDatabase.rawQuery(
+            """
+        SELECT club_name, short_title, short_introduction, photo_path
+        FROM tb_club
+        WHERE club_name = 'High Runner'
+        """.trimIndent(), null
         )
+
+        var clubData: InsertClubExample.ClubData? = null
+
+        if (cursor.moveToFirst()) {
+            val clubName = cursor.getString(0)
+            val shortTitle = cursor.getString(1)
+            val shortIntroduction = cursor.getString(2)
+            val photoPath = cursor.getString(3) ?: ""
+
+            clubData = InsertClubExample.ClubData(
+                clubName = clubName,
+                shortTitle = shortTitle,
+                shortIntroduction = shortIntroduction,
+                photoPath = photoPath
+            )
+        }
+        cursor.close()
+        return clubData
+    }
+
+    private fun applyHighRunnerData(db: DatabaseHelper) {
+        val clubData = getHighRunnerData(db)
+
+        if (clubData != null) {
+            val marathonTitle = findViewById<TextView>(R.id.marathonTitle)
+            val marathonDescription = findViewById<TextView>(R.id.marathonDescription)
+            val marathonImage = findViewById<ImageView>(R.id.marathonImage)
+
+            marathonTitle.text = clubData.shortTitle
+            marathonDescription.text = clubData.shortIntroduction
+
+            // Glide를 사용하여 이미지 로드
+            if (!clubData.photoPath.isNullOrEmpty()) {
+                val file = File(clubData.photoPath)
+                if (file.exists()) {
+                    Glide.with(this)
+                        .load(Uri.fromFile(file))
+                        .placeholder(R.drawable.img_banner_1)
+                        .error(R.drawable.sorbet)
+                        .into(marathonImage)
+                } else {
+                    marathonImage.setImageResource(R.drawable.img_banner_1)
+                }
+            } else {
+                marathonImage.setImageResource(R.drawable.img_banner_1)
+            }
+        }
     }
 
     // 마감 임박 데이터 함수 추가
-    private fun getDeadlineData(): List<ActivityItem> {
-        return listOf(
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "열정을 불태우는 축구 타임",
-                description = "매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!",
-                rating = "9/10"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "흥미진진한 야구",
-                description = "매주 경기를 통해 흥미진진한 시간을 보낼 수 있는 모임!",
-                rating = "8/10"
-            ),
-            ActivityItem(
-                image = R.drawable.img_banner_1,
-                title = "마감 임박 모임 3",
-                description = "마감 임박 모임 설명 3",
-                rating = "8/10"
-            )
-        )
+    private fun getDeadlineData(db: DatabaseHelper): List<ActivityItem> {
+        return getActivityData(db) // 신규 모임도 동일한 데이터 사용
     }
 
-    private fun getRecommendedData(): List<RecommendedItem> {
-        val data = listOf(
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            ),
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            ),
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            ),
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            ),
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            ),
-            RecommendedItem(
-                image = R.drawable.img_banner_1,
-                title = "헤이",
-                subtitle = "배드민턴 초급자 부터 중급자 까지!"
-            )
+    private fun getRecommendedData(db: DatabaseHelper): List<RecommendedItem> {
+        val list = mutableListOf<RecommendedItem>()
+        val cursor = db.readableDatabase.rawQuery(
+            """
+        SELECT club_name, short_introduction, photo_path 
+        FROM tb_club 
+        ORDER BY rowid DESC 
+        LIMIT 8 OFFSET 1
+        """.trimIndent(), null
         )
 
-        // 데이터 크기를 로그로 출력 (디버깅 목적)
-        Log.d("MainActivity", "Recommended data size: ${data.size}")
+        while (cursor.moveToNext()) {
+            val title = cursor.getString(0)
+            val subtitle = cursor.getString(1)
+            val imagePath = cursor.getString(2) ?: ""
 
-        return data
+            list.add(RecommendedItem(image = imagePath, title = title, subtitle = subtitle))
+        }
+
+        cursor.close()
+        return list
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

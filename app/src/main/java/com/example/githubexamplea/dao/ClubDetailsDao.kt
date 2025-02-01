@@ -9,10 +9,10 @@ class ClubDetailsDao(private val db: SQLiteDatabase) {
     // 클럽 상세 정보 추가
     fun insertClubDetails(
         clubName: String,
-        clubIntroduction: String,
-        program_1: String,
-        program_2: String,
-        program_3: String
+        clubIntroduction: String?,
+        program_1: String?,
+        program_2: String?,
+        program_3: String?
     ): Long {
         val values = ContentValues().apply {
             put(DatabaseContract.ClubDetailsTable.COLUMN_CLUB_NAME, clubName)

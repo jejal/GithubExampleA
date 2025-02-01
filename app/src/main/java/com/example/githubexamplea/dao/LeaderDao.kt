@@ -12,7 +12,8 @@ class LeaderDao(private val db: SQLiteDatabase) {
         leaderId: String,
         leaderIntroduction: String,
         clubIntroduction: String,
-        leaderCareer: String?
+        leaderCareer: String?,
+        leaderPhotoPath: String? // 추가된 매개변수
     ): Long {
         db.beginTransaction()
         return try {
@@ -22,6 +23,7 @@ class LeaderDao(private val db: SQLiteDatabase) {
                 put(DatabaseContract.LeaderTable.COLUMN_LEADER_INTRO, leaderIntroduction)
                 put(DatabaseContract.LeaderTable.COLUMN_CLUB_INTRO, clubIntroduction)
                 put(DatabaseContract.LeaderTable.COLUMN_LEADER_CAREER, leaderCareer)
+                put(DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO, leaderPhotoPath)
             }
             val result = db.insert(DatabaseContract.LeaderTable.TABLE_NAME, null, values)
             if (result != -1L) {
@@ -39,13 +41,15 @@ class LeaderDao(private val db: SQLiteDatabase) {
         newLeaderId: String,
         newLeaderIntro: String,
         newClubIntro: String,
-        newLeaderCareer: String?
+        newLeaderCareer: String?,
+        newLeaderPhotoPath: String?
     ): Int {
         val values = ContentValues().apply {
             put(DatabaseContract.LeaderTable.COLUMN_ID, newLeaderId)
             put(DatabaseContract.LeaderTable.COLUMN_LEADER_INTRO, newLeaderIntro)
             put(DatabaseContract.LeaderTable.COLUMN_CLUB_INTRO, newClubIntro)
             put(DatabaseContract.LeaderTable.COLUMN_LEADER_CAREER, newLeaderCareer)
+            put(DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO, newLeaderPhotoPath)
         }
         return db.update(
             DatabaseContract.LeaderTable.TABLE_NAME,
@@ -93,7 +97,26 @@ class LeaderDao(private val db: SQLiteDatabase) {
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.LeaderTable.COLUMN_CLUB_INTRO))
                 leaderMap[DatabaseContract.LeaderTable.COLUMN_LEADER_CAREER] =
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.LeaderTable.COLUMN_LEADER_CAREER))
+                leaderMap[DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO] =
+                    c.getString(c.getColumnIndexOrThrow(DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO))
                 leaderMap
+            } else {
+                null
+            }
+        }
+    }
+
+    fun getLeaderPhotoPath(clubName: String): String? {
+        val cursor = db.query(
+            DatabaseContract.LeaderTable.TABLE_NAME,
+            arrayOf(DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO),
+            "${DatabaseContract.LeaderTable.COLUMN_CLUB_NAME} = ?",
+            arrayOf(clubName),
+            null, null, null
+        )
+        cursor.use { c ->
+            return if (c.moveToFirst()) {
+                c.getString(c.getColumnIndexOrThrow(DatabaseContract.LeaderTable.COLUMN_LEADER_PHOTO))
             } else {
                 null
             }

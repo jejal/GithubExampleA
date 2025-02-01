@@ -1,5 +1,7 @@
 package com.example.githubexamplea.adapter
 
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +10,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.githubexamplea.R
 import com.example.githubexamplea.model.RecommendedItem
+import java.io.File
 
 class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewHolder>(RecommendedDiffCallback()) {
 
@@ -29,8 +33,8 @@ class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewH
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item, position)
+        val recommendedItem = getItem(position)
+        holder.bind(recommendedItem, position)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -40,9 +44,28 @@ class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewH
         private val heartIcon: ImageView = view.findViewById(R.id.heartIcon)
 
         fun bind(item: RecommendedItem, position: Int) {
-            imageView.setImageResource(item.image)
             titleText.text = item.title
             subtitleText.text = item.subtitle
+
+            if (!item.image.isNullOrEmpty()) {
+                val file = File(item.image)
+                if (file.exists()) {
+                    Log.d("GlideDebug", "파일 존재 확인됨: ${item.image}")
+
+                    Glide.with(itemView.context)
+                        .load(Uri.fromFile(file)) // ✅ 내부 저장소 파일을 로드
+                        .placeholder(R.drawable.img_banner_1) // 로딩 중 표시할 이미지
+                        .error(R.drawable.sorbet) // 오류 발생 시 기본 이미지
+                        .into(imageView)
+
+                } else {
+                    Log.e("GlideError", "파일이 존재하지 않음: ${item.image}")
+                    imageView.setImageResource(R.drawable.img_banner_1)
+                }
+            } else {
+                Log.e("GlideError", "SQLite에서 가져온 imagePath가 NULL 또는 EMPTY")
+                imageView.setImageResource(R.drawable.img_banner_1)
+            }
 
             // 찜 여부에 따른 아이콘 설정
             heartIcon.setImageResource(

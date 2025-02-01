@@ -1,4 +1,4 @@
-package com.example.githubexamplea.insert
+package com.example.githubexamplea.data
 
 import android.content.Context
 import com.example.githubexamplea.database.DatabaseHelper

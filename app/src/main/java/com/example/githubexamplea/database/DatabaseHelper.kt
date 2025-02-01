@@ -9,7 +9,7 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "Actify.db"
-        private const val DATABASE_VERSION = 10
+        private const val DATABASE_VERSION = 12
         private const val TAG = "DatabaseHelper"
 
         // 기존 tb_user 테이블 관련 상수
@@ -77,7 +77,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 id TEXT NOT NULL,
                 leader_introduction TEXT NOT NULL,
                 club_introduction TEXT NOT NULL,
-                leader_career TEXT
+                leader_career TEXT,
+                leader_photo_path TEXT
             )
         """.trimIndent()
         db.execSQL(createTbLeader)
@@ -100,11 +101,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 club_name TEXT PRIMARY KEY,
                 short_title TEXT NOT NULL,
                 short_introduction TEXT NOT NULL,
-                date TEXT NOT NULL,
-                time TEXT NOT NULL,
-                location TEXT NOT NULL,
-                needs TEXT NOT NULL,
-                cost TEXT NOT NULL
+                date TEXT,
+                time TEXT,
+                location TEXT,
+                needs TEXT,
+                cost TEXT,
+                photo_path TEXT
             )
         """.trimIndent()
         db.execSQL(createTbClub)
@@ -127,10 +129,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val createTbClubDetails = """
             CREATE TABLE $TABLE_CLUB_DETAILS (
                 club_name TEXT PRIMARY KEY,
-                club_introduction TEXT NOT NULL,
-                program_1 TEXT NOT NULL,
-                program_2 TEXT NOT NULL,
-                program_3 TEXT NOT NULL
+                club_introduction TEXT,
+                program_1 TEXT,
+                program_2 TEXT,
+                program_3 TEXT
             )
         """.trimIndent()
         db.execSQL(createTbClubDetails)

@@ -11,11 +11,12 @@ class ClubDao(private val db: SQLiteDatabase) {
         clubName: String,
         shortTitle: String,
         shortIntroduction: String,
-        date: String,
-        time: String,
-        location: String,
-        needs: String,
-        cost: String
+        date: String?,
+        time: String?,
+        location: String?,
+        needs: String?,
+        cost: String?,
+        photoPath: String?
     ): Long {
         val values = ContentValues().apply {
             put(DatabaseContract.ClubTable.COLUMN_CLUB_NAME, clubName)
@@ -26,6 +27,7 @@ class ClubDao(private val db: SQLiteDatabase) {
             put(DatabaseContract.ClubTable.COLUMN_LOCATION, location)
             put(DatabaseContract.ClubTable.COLUMN_NEEDS, needs)
             put(DatabaseContract.ClubTable.COLUMN_COST, cost)
+            put(DatabaseContract.ClubTable.COLUMN_PHOTO_PATH, photoPath)
         }
         return db.insert(DatabaseContract.ClubTable.TABLE_NAME, null, values)
     }
@@ -35,11 +37,12 @@ class ClubDao(private val db: SQLiteDatabase) {
         clubName: String,
         shortTitle: String,
         shortIntroduction: String,
-        newDate: String,
-        newTime: String,
-        newLocation: String,
-        newNeeds: String,
-        newCost: String
+        newDate: String?,
+        newTime: String?,
+        newLocation: String?,
+        newNeeds: String?,
+        newCost: String?,
+        newPhotoPath: String?
     ): Int {
         val values = ContentValues().apply {
             put(DatabaseContract.ClubTable.COLUMN_SHORT_TITLE, shortTitle)
@@ -49,6 +52,7 @@ class ClubDao(private val db: SQLiteDatabase) {
             put(DatabaseContract.ClubTable.COLUMN_LOCATION, newLocation)
             put(DatabaseContract.ClubTable.COLUMN_NEEDS, newNeeds)
             put(DatabaseContract.ClubTable.COLUMN_COST, newCost)
+            put(DatabaseContract.ClubTable.COLUMN_PHOTO_PATH, newPhotoPath)
         }
         return db.update(
             DatabaseContract.ClubTable.TABLE_NAME,
@@ -102,6 +106,8 @@ class ClubDao(private val db: SQLiteDatabase) {
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_NEEDS))
                 clubMap[DatabaseContract.ClubTable.COLUMN_COST] =
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_COST))
+                clubMap[DatabaseContract.ClubTable.COLUMN_PHOTO_PATH] =
+                    c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_PHOTO_PATH))
                 clubMap
             } else {
                 null
@@ -136,6 +142,8 @@ class ClubDao(private val db: SQLiteDatabase) {
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_NEEDS))
                 clubMap[DatabaseContract.ClubTable.COLUMN_COST] =
                     c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_COST))
+                clubMap[DatabaseContract.ClubTable.COLUMN_PHOTO_PATH] =
+                    c.getString(c.getColumnIndexOrThrow(DatabaseContract.ClubTable.COLUMN_PHOTO_PATH))
                 list.add(clubMap)
             }
         }

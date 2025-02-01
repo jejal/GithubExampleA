@@ -52,7 +52,7 @@
                     android:id="@+id/tv_participants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 / 11"
+                    android:text="6명 신청"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
@@ -77,6 +77,7 @@
 
                 <!-- 모임 상세 정보 -->
                 <TextView
+                    android:id="@+id/club_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📅 매주 수요일 저녁 7시~9시\n📍 서울여자대학교 운동장\n✔ 운동화(축구화), 운동복, 물병, 보호대(선택)\n💰 10,000 원"
@@ -84,7 +85,7 @@
                     android:paddingTop="8dp"
                     android:paddingHorizontal="16dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <View
@@ -113,16 +114,16 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
+                    android:id="@+id/club_intro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="킥스 앤 드림스는 축구를 사랑하는 대학생 여성들이 모여 즐거움과 열정을 나누는 곳입니다. 초보자도 환영하며, 기본 드릴과 기술부터 시작해 경기 전략까지 함께 배우고 연습합니다. 매주 팀원들과 함께 땀 흘리며 팀워크와 유대감을 쌓아보세요! 정기적으로 다른 동아리와의 친선 경기 및 자체 리그도 진행되니 도전 정신을 가진 여러분을 기다립니다. 축구 실력보다 중요한 건 즐길 준비입니다!"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <!-- 모임 활동 -->
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,56 +134,62 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/club_protitle1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="연습 프로그램"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_program1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="드리블, 패스, 슛 등 기본 축구 기술 트레이닝\n미니 게임 및 포지션 연습으로 실전 감각 익히기"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_protitle2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="경기 프로그램"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_program2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="자체 리그: 동아리 내 팀 간 리그전 진행\n외부 친선 경기: 다른 대학 클럽 또는 지역 풋살 팀과 교류 경기"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_protitle3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="추가 활동"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_program3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="축구 퀴즈나 소규모 이벤트로 팀워크 강화\n시즌 종료 후 시상식(MVP, 베스트 팀플레이어 등)"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <!-- FAQ -->
                 <TextView
@@ -193,58 +200,64 @@
                     android:textStyle="bold"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
 
                 <TextView
+                    android:id="@+id/club_question1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Q. 축구를 처음 해봐도 괜찮을까요?"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
 
                 <TextView
+                    android:id="@+id/club_answer1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="A. 물론입니다! 초보자를 위한 기본 트레이닝이 준비되어 있습니다."
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_question2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Q. 참가비 외에 추가 비용이 있나요?"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
 
                 <TextView
+                    android:id="@+id/club_answer2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="A. 추가 비용은 없으며, 개인 준비물만 챙겨주시면 됩니다."
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_question3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Q. 시간 맞추기 어려운 경우 어떻게 하나요?"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
 
                 <TextView
+                    android:id="@+id/club_answer3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="A. 모든 일정 참여가 필수는 아니며, 가능한 일정에만 참여하셔도 됩니다."
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <View
@@ -270,7 +283,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <!-- 첫 번째 후기 -->
                 <LinearLayout
@@ -284,11 +297,12 @@
                     android:elevation="4dp">
 
                     <TextView
+                        android:id="@+id/club_review1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="축구 경험이 없었지만 너무 재미있고 땀 흘리는 게 뿌듯했어요!"
                         android:textSize="14sp"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <!-- 두 번째 후기 -->
@@ -303,11 +317,12 @@
                     android:elevation="4dp">
 
                     <TextView
+                        android:id="@+id/club_review2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="여자 친구들끼리 모여 운동하니까 더 친밀해졌어요."
                         android:textSize="14sp"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <!-- 세 번째 후기 -->
@@ -323,11 +338,12 @@
                     android:layout_marginBottom="8dp">
 
                     <TextView
+                        android:id="@+id/club_review3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="몸을 움직이니까 건강도 챙길 수 있어서 좋았어요!"
                         android:textSize="14sp"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -355,16 +371,17 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/club_info2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📅 매주 수요일 저녁 7시~9시\n📍 서울여자대학교 운동장\n✔ 운동화(축구화), 운동복, 물병, 보호대(선택)\n💰 10,000 원\n👥 6 ~ 11명"
+                    android:text="📅 매주 수요일 저녁 7시~9시\n📍 서울여자대학교 운동장\n✔ 운동화(축구화), 운동복, 물병, 보호대(선택)\n💰 10,000 원"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <View
@@ -391,7 +408,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:paddingTop="16dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
 
                 <!-- 초록 박스 배경 적용 -->
                 <LinearLayout
@@ -403,10 +420,12 @@
 
                     <!-- 모임장 사진 -->
                     <ImageView
+                        android:id="@+id/club_hostImage"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/sorbet" />
+                        android:src="@drawable/sorbet"
+                        android:background="@color/white" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -416,6 +435,7 @@
                         android:layout_marginTop="8dp">
 
                         <TextView
+                            android:id="@+id/club_hostName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="김슈니"
@@ -423,15 +443,16 @@
                             android:textStyle="bold"
                             android:paddingLeft="16dp"
                             android:paddingTop="16dp"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@color/white" />
 
                         <TextView
+                            android:id="@+id/club_hostIntro"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="안녕하세요! 모임장 김슈니입니다. ENFP인 만큼 모임을 재미있게 이끌어가고 싶어요! 초보자 분들도 환영! 책임감 있는 모임장만 따라오세요 ~ ✌"
                             android:textSize="14sp"
                             android:padding="16dp"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -495,7 +516,7 @@
                                 android:id="@+id/people_count1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6/10"
+                                android:text="현재 인원: 6"
                                 android:textSize="14sp"
                                 android:textColor="@color/white"
                                 android:background="@color/green"
@@ -512,6 +533,7 @@
                             android:paddingTop="8dp">
 
                             <TextView
+                                android:id="@+id/image1_title"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="4dp"
@@ -521,6 +543,7 @@
                                 android:textColor="@android:color/black"/>
 
                             <TextView
+                                android:id="@+id/image1_intro"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="아침마다 캠퍼스 곳곳을 달리는 이 모임은 단순한 러닝 그 이상! 러닝 초보부터 마라토너까지 모두 환영!"
@@ -554,7 +577,7 @@
                                 android:id="@+id/people_count2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6/10"
+                                android:text="현재 인원: 6"
                                 android:textSize="14sp"
                                 android:textColor="@color/white"
                                 android:background="@color/green"
@@ -571,20 +594,22 @@
                             android:paddingTop="8dp">
 
                             <TextView
+                                android:id="@+id/image2_title"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="4dp"
                                 android:text="열정을 불태우는 축구 타임"
                                 android:textStyle="bold"
                                 android:textSize="16sp"
-                                android:textColor="@android:color/black"/>
+                                android:textColor="@color/black"/>
 
                             <TextView
+                                android:id="@+id/image2_intro"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="매주 쌓아올리는 팀워크! 초보라도 도전 정신을 가진 사람이라면 누구나 환영!"
                                 android:textSize="14sp"
-                                android:textColor="@android:color/black"/>
+                                android:textColor="@color/black"/>
                         </LinearLayout>
 
                     </LinearLayout>

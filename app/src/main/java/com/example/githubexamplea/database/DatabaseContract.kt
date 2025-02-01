@@ -2,7 +2,7 @@ package com.example.githubexamplea.database
 
 object DatabaseContract {
     const val DATABASE_NAME = "Actify.db"
-    const val DATABASE_VERSION = 10
+    const val DATABASE_VERSION = 12
 
     object UserTable {
         const val TABLE_NAME = "tb_user"
@@ -22,6 +22,7 @@ object DatabaseContract {
         const val COLUMN_LEADER_INTRO = "leader_introduction"
         const val COLUMN_CLUB_INTRO = "club_introduction"
         const val COLUMN_LEADER_CAREER = "leader_career"
+        const val COLUMN_LEADER_PHOTO = "leader_photo_path"
     }
 
     object LikeTable {
@@ -40,6 +41,7 @@ object DatabaseContract {
         const val COLUMN_LOCATION = "location"
         const val COLUMN_NEEDS = "needs"
         const val COLUMN_COST = "cost"
+        const val COLUMN_PHOTO_PATH = "photo_path"
     }
 
     object ApplicationTable {
