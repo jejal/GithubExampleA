@@ -1,7 +1,7 @@
 package com.example.githubexamplea.adapter
 
+import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +12,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubexamplea.R
+import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.model.RecommendedItem
+import com.example.githubexamplea.utils.SharedPreferencesHelper
 import java.io.File
 
-class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewHolder>(RecommendedDiffCallback()) {
-
-    // 찜 상태 저장 리스트
-    private val favoriteStatus = mutableListOf<Boolean>()
-
-    override fun submitList(list: List<RecommendedItem>?) {
-        super.submitList(list)
-        favoriteStatus.clear()
-        list?.let { favoriteStatus.addAll(List(it.size) { false }) }
-    }
+class RecommendedAdapter(private val context: Context) :
+    ListAdapter<RecommendedItem, RecommendedAdapter.ViewHolder>(RecommendedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -34,7 +28,7 @@ class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewH
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recommendedItem = getItem(position)
-        holder.bind(recommendedItem, position)
+        holder.bind(recommendedItem)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -43,44 +37,50 @@ class RecommendedAdapter : ListAdapter<RecommendedItem, RecommendedAdapter.ViewH
         private val subtitleText: TextView = view.findViewById(R.id.subtitleText)
         private val heartIcon: ImageView = view.findViewById(R.id.heartIcon)
 
-        fun bind(item: RecommendedItem, position: Int) {
+        fun bind(item: RecommendedItem) {
             titleText.text = item.title
             subtitleText.text = item.subtitle
 
             if (!item.image.isNullOrEmpty()) {
                 val file = File(item.image)
                 if (file.exists()) {
-                    Log.d("GlideDebug", "파일 존재 확인됨: ${item.image}")
-
                     Glide.with(itemView.context)
-                        .load(Uri.fromFile(file)) // ✅ 내부 저장소 파일을 로드
-                        .placeholder(R.drawable.img_banner_1) // 로딩 중 표시할 이미지
-                        .error(R.drawable.sorbet) // 오류 발생 시 기본 이미지
+                        .load(Uri.fromFile(file))
+                        .placeholder(R.drawable.img_banner_1)
+                        .error(R.drawable.sorbet)
                         .into(imageView)
-
                 } else {
-                    Log.e("GlideError", "파일이 존재하지 않음: ${item.image}")
                     imageView.setImageResource(R.drawable.img_banner_1)
                 }
             } else {
-                Log.e("GlideError", "SQLite에서 가져온 imagePath가 NULL 또는 EMPTY")
                 imageView.setImageResource(R.drawable.img_banner_1)
             }
 
-            // 찜 여부에 따른 아이콘 설정
-            heartIcon.setImageResource(
-                if (favoriteStatus[position]) R.drawable.ic_like_red
-                else R.drawable.ic_like_white
-            )
+            updateFavoriteIcon(item.isFavorite)
 
-            // 찜하기 버튼 클릭 이벤트 설정
             heartIcon.setOnClickListener {
-                favoriteStatus[position] = !favoriteStatus[position]
-                heartIcon.setImageResource(
-                    if (favoriteStatus[position]) R.drawable.ic_like_red
-                    else R.drawable.ic_like_white
-                )
+                toggleFavoriteStatus(item)
             }
+        }
+
+        private fun toggleFavoriteStatus(item: RecommendedItem) {
+            val dbHelper = DatabaseHelper(context)
+            val db = dbHelper.writableDatabase
+            val userId = SharedPreferencesHelper.getUserId(context) ?: return
+
+            item.isFavorite = !item.isFavorite
+
+            if (item.isFavorite) {
+                db.execSQL("INSERT OR IGNORE INTO tb_like (id, club_name) VALUES (?, ?)", arrayOf(userId, item.title))
+            } else {
+                db.execSQL("DELETE FROM tb_like WHERE id = ? AND club_name = ?", arrayOf(userId, item.title))
+            }
+
+            updateFavoriteIcon(item.isFavorite)
+        }
+
+        private fun updateFavoriteIcon(isFavorite: Boolean) {
+            heartIcon.setImageResource(if (isFavorite) R.drawable.ic_like_red else R.drawable.ic_like_white)
         }
     }
 }

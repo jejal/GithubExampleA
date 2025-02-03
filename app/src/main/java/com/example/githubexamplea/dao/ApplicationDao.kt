@@ -19,17 +19,23 @@ class ApplicationDao(private val db: SQLiteDatabase) {
             put(DatabaseContract.ApplicationTable.COLUMN_DATE, date)
             put(DatabaseContract.ApplicationTable.COLUMN_TIME, time)
         }
-        return db.insert(DatabaseContract.ApplicationTable.TABLE_NAME, null, values)
+        return db.insertWithOnConflict(
+            DatabaseContract.ApplicationTable.TABLE_NAME,
+            null,
+            values,
+            SQLiteDatabase.CONFLICT_IGNORE // 중복 시 무시
+        )
     }
 
     // 지원서 삭제
-    fun deleteApplication(userId: String, clubName: String, date: String): Int {
+    fun deleteApplication(userId: String, clubName: String, date: String, time: String): Int {
         return db.delete(
             DatabaseContract.ApplicationTable.TABLE_NAME,
             "${DatabaseContract.ApplicationTable.COLUMN_ID} = ? AND " +
                     "${DatabaseContract.ApplicationTable.COLUMN_CLUB_NAME} = ? AND " +
-                    "${DatabaseContract.ApplicationTable.COLUMN_DATE} = ?",
-            arrayOf(userId, clubName, date)
+                    "${DatabaseContract.ApplicationTable.COLUMN_DATE} = ? AND " +
+                    "${DatabaseContract.ApplicationTable.COLUMN_TIME} = ?",
+            arrayOf(userId, clubName, date, time)
         )
     }
 

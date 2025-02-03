@@ -1,12 +1,20 @@
 package com.example.githubexamplea.database
 
+import kotlinx.coroutines.*
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.githubexamplea.data.InsertApplicationExample
+import com.example.githubexamplea.data.InsertClubExample
+import com.example.githubexamplea.data.InsertFaqExample
+import com.example.githubexamplea.data.InsertLeaderExample
+import com.example.githubexamplea.data.InsertLikeExample
+import com.example.githubexamplea.data.InsertReviewExample
+import com.example.githubexamplea.data.InsertUserExample
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "Actify.db"
         private const val DATABASE_VERSION = 12
@@ -41,6 +49,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         createTbClubDetails(db)
         createTbReview(db)
         createTbFaq(db)
+
+        val sharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val isDatabaseInitialized = sharedPreferences.getBoolean("isDatabaseInitialized", false)
+
+        if (!isDatabaseInitialized) {
+            // 🔹 CoroutineScope을 사용해서 비동기 실행
+            CoroutineScope(Dispatchers.IO).launch {
+                insertInitialData(db, context)
+
+                // 초기화 완료 저장
+                withContext(Dispatchers.Main) {
+                    sharedPreferences.edit().putBoolean("isDatabaseInitialized", true).apply()
+                }
+            }
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -166,6 +189,77 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL(createTbFaq)
     }
 
+    private suspend fun insertInitialData(db: SQLiteDatabase, context: Context) {
+        Log.d(TAG, "초기 데이터 삽입 시작")
+
+        try {
+            withContext(Dispatchers.IO) {  // 🔹 IO 스레드에서 실행 (DB 최적화)
+                InsertUserExample(db).insertMultipleUsers()
+                InsertLikeExample(db).insertLikes()
+                InsertApplicationExample(db).insertSampleApplications()
+                InsertReviewExample(db).insertSampleReviews()
+                InsertFaqExample(db).insertSampleFaqs()
+
+                // 🆕 추가할 부분: tb_leader와 tb_club 데이터도 함께 삽입!
+                InsertLeaderExample(db, context).insertLeaders()
+                InsertClubExample(db, context).insertClubsWithDetails()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "초기 데이터 삽입 중 오류 발생: ${e.message}")
+        }
+
+        Log.d(TAG, "초기 데이터 삽입 완료")
+    }
+
+    // ✅ 안전한 사용자 인증 (Coroutine + Retry 적용)
+    suspend fun validateUser(id: String, password: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            var attempt = 0
+            val maxAttempts = 5  // 최대 5회 재시도
+
+            while (attempt < maxAttempts) {
+                try {
+                    val db = readableDatabase
+                    val cursor = db.query(
+                        TABLE_USERS,
+                        arrayOf(COLUMN_ID),
+                        "$COLUMN_ID = ? AND $COLUMN_PASSWORD = ?",
+                        arrayOf(id, password),
+                        null,
+                        null,
+                        null
+                    )
+
+                    val isValid = cursor.count > 0
+                    cursor.close()
+                    return@withContext isValid  // ✅ 성공하면 즉시 반환
+
+                } catch (e: Exception) {
+                    attempt++
+                    delay(200L)  // 🔥 200ms 대기 후 재시도
+                }
+            }
+            false  // 🔴 5번 재시도 후에도 실패하면 false 반환
+        }
+    }
+
+    // ✅ 사용자 정보 가져오기
+    suspend fun getUserName(id: String): String {
+        return withContext(Dispatchers.IO) {
+            val db = readableDatabase
+            val cursor = db.query(
+                TABLE_USERS,
+                arrayOf(COLUMN_NAME),
+                "$COLUMN_ID = ?",
+                arrayOf(id),
+                null, null, null
+            )
+            val name = if (cursor.moveToFirst()) cursor.getString(0) else "사용자"
+            cursor.close()
+            name
+        }
+    }
+
     fun isTableExists(): Boolean {
         return try {
             val db = this.readableDatabase
@@ -238,47 +332,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         } finally {
             db.endTransaction()
             db.close()
-        }
-    }
-
-    fun validateUser(id: String, password: String): Boolean {
-        return try {
-            val db = this.readableDatabase
-            val cursor = db.query(
-                TABLE_USERS,
-                arrayOf(COLUMN_ID),
-                "$COLUMN_ID = ? AND $COLUMN_PASSWORD = ?",
-                arrayOf(id, password),
-                null,
-                null,
-                null
-            )
-            val isValid = cursor.count > 0
-            cursor.close()
-            Log.d(TAG, "사용자 인증 결과: $isValid")
-            isValid
-        } catch (e: Exception) {
-            Log.e(TAG, "사용자 인증 실패: ${e.message}")
-            false
-        }
-    }
-
-    fun getUserName(id: String): String {
-        val db = this.readableDatabase
-        val cursor = db.query(
-            TABLE_USERS,
-            arrayOf(COLUMN_NAME),
-            "$COLUMN_ID = ?",
-            arrayOf(id),
-            null, null, null
-        )
-        return if (cursor.moveToFirst()) {
-            val name = cursor.getString(0)
-            cursor.close()
-            name
-        } else {
-            cursor.close()
-            "사용자"
         }
     }
 }

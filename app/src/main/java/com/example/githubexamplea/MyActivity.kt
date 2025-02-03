@@ -15,11 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubexamplea.adapter.MeetingAdapter
 import com.example.githubexamplea.adapter.FavoriteAdapter
+import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.model.MeetingItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.githubexamplea.utils.SharedPreferencesHelper
 
 class MyActivity : AppCompatActivity() {
+    private lateinit var totalLikeTextView: TextView
+    private lateinit var totalApplyTextView: TextView
+    private lateinit var textUnivMajor: TextView
+    private lateinit var  totalReviewTextView: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my)
@@ -61,6 +67,14 @@ class MyActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        totalLikeTextView = findViewById(R.id.totalLike)
+        totalApplyTextView = findViewById(R.id.totalApply)
+        totalReviewTextView = findViewById(R.id.totalReview)
+        updateClubCounts()
+
+        textUnivMajor = findViewById(R.id.textUnivMajor)
+        updateUserUniversityAndMajor()
     }
 
     private fun setupBottomNavigation() {
@@ -131,33 +145,137 @@ class MyActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerViews() {
-        // 신청한 모임 데이터 설정
-        val appliedMeetingsList = listOf(
-            MeetingItem(R.drawable.img_banner_1, "수영", "초급자부터 중급자까지!"),
-            MeetingItem(R.drawable.img_banner_1, "테니스", "전문가와 함께하는 수업"),
-            MeetingItem(R.drawable.img_banner_1, "탁구", "재미있는 탁구 모임"),
-            MeetingItem(R.drawable.img_banner_1, "축구", "열정을 불태우는 축구!")
-        )
-
-        // 찜한 모임 데이터 설정
-        val favoriteMeetingsList = listOf(
-            MeetingItem(R.drawable.img_banner_1, "수영", "즐거운 수영 모임"),
-            MeetingItem(R.drawable.img_banner_1, "테니스", "건강한 아침 테니스"),
-            MeetingItem(R.drawable.img_banner_1, "탁구", "탁구 마스터 도전"),
-            MeetingItem(R.drawable.img_banner_1, "축구", "매주 토요일 정기 모임")
-        )
+        val appliedMeetingsList = getAppliedMeetings().toMutableList()
+        val favoriteMeetingsList = getFavoriteMeetings().toMutableList()
+        val dbHelper = DatabaseHelper(this)
+        val userId = SharedPreferencesHelper.getUserId(this) ?: "guest"
 
         // 신청한 모임 RecyclerView 설정
         findViewById<RecyclerView>(R.id.rvAppliedMeetings).apply {
             layoutManager = LinearLayoutManager(this@MyActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MeetingAdapter(appliedMeetingsList)
+            adapter = MeetingAdapter(this@MyActivity, appliedMeetingsList) {
+                updateClubCounts() // 🔹 신청 취소 시 숫자 즉시 업데이트
+            }
         }
 
         // 찜한 모임 RecyclerView 설정
         findViewById<RecyclerView>(R.id.rvFavoriteMeetings).apply {
             layoutManager = LinearLayoutManager(this@MyActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = FavoriteAdapter(favoriteMeetingsList)
+            adapter = FavoriteAdapter(favoriteMeetingsList, dbHelper, userId) {
+                updateClubCounts() // 🔹 찜 취소 시 숫자 즉시 업데이트
+            }
         }
+    }
+
+    private fun getAppliedMeetings(): List<MeetingItem> {
+        val meetingList = mutableListOf<MeetingItem>()
+        val dbHelper = DatabaseHelper(this)
+        val db = dbHelper.readableDatabase
+        val userId = SharedPreferencesHelper.getUserId(this)
+
+        val cursor = db.rawQuery(
+            """
+            SELECT c.photo_path, a.club_name, c.short_introduction, a.date, a.time
+            FROM tb_application AS a
+            JOIN tb_club AS c ON a.club_name = c.club_name
+            WHERE a.id = ?
+            """.trimIndent(), arrayOf(userId)
+        )
+
+        while (cursor.moveToNext()) {
+            val imagePath = cursor.getString(0) ?: ""
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+            val date = cursor.getString(3)
+            val time = cursor.getString(4)
+
+            meetingList.add(MeetingItem(imagePath, title, description, date, time))
+        }
+
+        cursor.close()
+        return meetingList
+    }
+
+    private fun getFavoriteMeetings(): List<MeetingItem> {
+        val favoriteList = mutableListOf<MeetingItem>()
+        val dbHelper = DatabaseHelper(this)
+        val db = dbHelper.readableDatabase
+        val userId = SharedPreferencesHelper.getUserId(this)
+
+        val cursor = db.rawQuery(
+            """
+        SELECT c.photo_path, l.club_name, c.short_introduction
+        FROM tb_like AS l
+        JOIN tb_club AS c ON l.club_name = c.club_name
+        WHERE l.id = ?
+        """.trimIndent(), arrayOf(userId)
+        )
+
+        while (cursor.moveToNext()) {
+            val imagePath = cursor.getString(0) ?: ""  // 내부 저장소의 클럽 이미지 경로
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+
+            favoriteList.add(MeetingItem(imagePath, title, description, "", "")) // 날짜, 시간 필요 없음
+        }
+
+        cursor.close()
+        return favoriteList
+    }
+
+    private fun updateUserUniversityAndMajor() {
+        val dbHelper = DatabaseHelper(this)
+        val userId = SharedPreferencesHelper.getUserId(this) ?: return
+
+        val cursor = dbHelper.readableDatabase.rawQuery(
+            """
+            SELECT university, major
+            FROM tb_user
+            WHERE id = ?
+            """.trimIndent(), arrayOf(userId)
+        )
+
+        if (cursor.moveToFirst()) {
+            val university = cursor.getString(0) ?: "대학 정보 없음"
+            val major = cursor.getString(1) ?: "전공 정보 없음"
+
+            // 🔹 대학과 전공을 "대학교 / 전공" 형태로 표시 (슬래시 양옆 공백 유지)
+            textUnivMajor.text = "$university / $major"
+        }
+
+        cursor.close()
+    }
+
+    private fun updateClubCounts() {
+        val dbHelper = DatabaseHelper(this)
+        val userId = SharedPreferencesHelper.getUserId(this) ?: return
+
+        val likeCursor = dbHelper.readableDatabase.rawQuery(
+            "SELECT COUNT(*) FROM tb_like WHERE id = ?", arrayOf(userId)
+        )
+        if (likeCursor.moveToFirst()) {
+            val likeCount = likeCursor.getInt(0)
+            totalLikeTextView.text = likeCount.toString()
+        }
+        likeCursor.close()
+
+        val applyCursor = dbHelper.readableDatabase.rawQuery(
+            "SELECT COUNT(*) FROM tb_application WHERE id = ?", arrayOf(userId)
+        )
+        if (applyCursor.moveToFirst()) {
+            val applyCount = applyCursor.getInt(0)
+            totalApplyTextView.text = applyCount.toString()
+        }
+        applyCursor.close()
+
+        val reviewCursor = dbHelper.readableDatabase.rawQuery(
+            "SELECT COUNT(*) FROM tb_review WHERE id = ?", arrayOf(userId)
+        )
+        if (reviewCursor.moveToFirst()) {
+            val reviewCount = reviewCursor.getInt(0)
+            totalReviewTextView.text = reviewCount.toString()
+        }
+        reviewCursor.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

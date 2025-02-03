@@ -6,16 +6,17 @@ import com.example.githubexamplea.database.DatabaseContract
 
 class LikeDao(private val db: SQLiteDatabase) {
 
-    // 좋아요 추가
+    // 좋아요 추가, 중복 방지: INSERT OR IGNORE 사용
     fun insertLike(userId: String, clubName: String): Long {
         val values = ContentValues().apply {
             put(DatabaseContract.LikeTable.COLUMN_ID, userId)
             put(DatabaseContract.LikeTable.COLUMN_CLUB_NAME, clubName)
         }
-        return db.insert(
+        return db.insertWithOnConflict(
             DatabaseContract.LikeTable.TABLE_NAME,
             null,
-            values
+            values,
+            SQLiteDatabase.CONFLICT_IGNORE // 중복 시 무시
         )
     }
 

@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/meetingTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="헤이"
         android:textStyle="bold"
@@ -39,10 +39,28 @@
 
     <TextView
         android:id="@+id/meetingDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="배드민턴 초급자 부터 중급자 까지!"
+        android:text="모임 설명"
         android:textSize="14sp"
         android:textColor="@color/dark_gray"
         android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/meetingDate"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="14sp"
+        android:textColor="@color/dark_gray"
+        android:layout_marginTop="3dp"/>
+
+    <TextView
+        android:id="@+id/meetingTime"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="14sp"
+        android:textColor="@color/dark_gray"
+        android:layout_marginTop="3dp"/>
 </LinearLayout>

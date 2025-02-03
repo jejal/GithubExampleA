@@ -44,12 +44,18 @@ class CompleteActivity : AppCompatActivity() {
         // 전달된 날짜 및 시간 정보 가져오기
         val selectedDate = intent.getStringExtra("SELECTED_DATE") ?: "날짜 선택 안됨"
         val selectedTime = intent.getStringExtra("SELECTED_TIME")?.replace("\n", " ") ?: "선택된 시간 없음"
+        val location = intent.getStringExtra("location") ?: "장소 정보 없음"
+        val needs = intent.getStringExtra("needs") ?: "준비물 정보 없음"
 
         // TextView에 설정
         val dateTextView = findViewById<TextView>(R.id.tvSelectedDate)
         val timeTextView = findViewById<TextView>(R.id.tvSelectedTime)
+        val locationTextView = findViewById<TextView>(R.id.tvLocation)
+        val needsTextView = findViewById<TextView>(R.id.tvNeeds)
         dateTextView.text = "$selectedDate"
         timeTextView.text = "$selectedTime"
+        locationTextView.text = "$location"
+        needsTextView.text = "$needs"
 
         val btnConfirm = findViewById<Button>(R.id.btn_confirm)
         btnConfirm.setOnClickListener {

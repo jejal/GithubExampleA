@@ -1,22 +1,21 @@
 package com.example.githubexamplea.data
 
-import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import com.example.githubexamplea.dao.ReviewDao
-import com.example.githubexamplea.database.DatabaseHelper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class InsertReviewExample(private val context: Context) {
+class InsertReviewExample(private val db: SQLiteDatabase) {
 
-    fun insertSampleReviews() {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    suspend fun insertSampleReviews() {
         val reviewDao = ReviewDao(db)
 
         val reviews = listOf(
             ReviewData(
-                userId = "miso",
+                userId = "uuu",
                 clubName = "Kicks & Dreams",
                 star = 4.5f,
                 review = "축구 경험이 없었지만 너무 재미있고 땀 흘리는게 뿌듯했어요!",
@@ -40,7 +39,7 @@ class InsertReviewExample(private val context: Context) {
                 date = getCurrentDate()
             ),
             ReviewData(
-                userId = "jun",
+                userId = "miso",
                 clubName = "Hit & Hustle",
                 star = 5.0f,
                 review = "야구를 전혀 몰랐지만 여기서 기본부터 배우며 정말 재미를 느꼈어요! 다른 대학생들과 친해지고, 대회에 나가서 승리했을 때는 정말 뿌듯했습니다.",
@@ -64,7 +63,7 @@ class InsertReviewExample(private val context: Context) {
                 date = getCurrentDate()
             ),
             ReviewData(
-                userId = "uuu",
+                userId = "jun",
                 clubName = "Breathe",
                 star = 5.0f,
                 review = "초급반에서 고급반으로 건너갈 수 있는 과정이 너무 뿌듯했어요!",
@@ -80,7 +79,7 @@ class InsertReviewExample(private val context: Context) {
                 date = getCurrentDate()
             ),
             ReviewData(
-                userId = "future",
+                userId = "lee",
                 clubName = "Breathe",
                 star = 5.0f,
                 review = "처음에는 낯설었지만, 요가가 점점 제 생활에 힐링을 주는 존재가 되었어요. 아침 세션으로 하루를 상쾌하게 시작할 수 있어서 너무 좋아요.",
@@ -89,8 +88,7 @@ class InsertReviewExample(private val context: Context) {
             )
         )
 
-        db.beginTransaction()
-        try {
+        withContext(Dispatchers.IO) {
             for (review in reviews) {
                 reviewDao.insertReview(
                     review.userId,
@@ -101,10 +99,6 @@ class InsertReviewExample(private val context: Context) {
                     review.date
                 )
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-            db.close()
         }
     }
 
@@ -114,7 +108,7 @@ class InsertReviewExample(private val context: Context) {
     }
 
     private fun getCurrentDate(): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
         return sdf.format(Date())
     }
 

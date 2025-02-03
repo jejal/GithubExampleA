@@ -26,12 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.githubexamplea.adapter.ActivityAdapter
 import com.example.githubexamplea.adapter.HostAdapter
 import com.example.githubexamplea.adapter.RecommendedAdapter
-import com.example.githubexamplea.data.InsertApplicationExample
 import com.example.githubexamplea.data.InsertClubExample
-import com.example.githubexamplea.data.InsertFaqExample
-import com.example.githubexamplea.data.InsertLeaderExample
-import com.example.githubexamplea.data.InsertReviewExample
-import com.example.githubexamplea.data.InsertUserExample
 import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.model.ActivityItem
 import com.example.githubexamplea.model.HostItem
@@ -61,26 +56,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
-
-        // tb_user 데이터 삽입
-        val inserter = InsertUserExample(this)
-        inserter.insertMultipleUsers()
-        // tb_leader 데이터 삽입
-        val leaderInserter = InsertLeaderExample(this)
-        leaderInserter.insertLeaders()
-        // tb_club, tb_club_details 데이터 삽입
-        val clubInserter = InsertClubExample(this)
-        clubInserter.insertClubsWithDetails()
-        // tb_review 데이터 삽입
-        val reviewInserter = InsertReviewExample(this)
-        reviewInserter.insertSampleReviews()
-        // tb_faq 데이터 삽입
-        val faqInserter = InsertFaqExample(this)
-        faqInserter.insertSampleFaqs()
-        // tb_application 데이터 삽입
-        val appInserter = InsertApplicationExample(this)
-        appInserter.insertSampleApplications()
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 12(API 31) 이상에서는 WindowInsetsController로 상태바 설정
@@ -159,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                 orientation = GridLayoutManager.HORIZONTAL  // 수평 방향으로 설정
             }
             this.layoutManager = layoutManager
-            recommendedAdapter = RecommendedAdapter()
+            recommendedAdapter = RecommendedAdapter(this@MainActivity)
             adapter = recommendedAdapter
         }
     }
@@ -250,15 +225,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun getActivityData(db: DatabaseHelper): List<ActivityItem> {
         val list = mutableListOf<ActivityItem>()
-        val cursor = db.readableDatabase.rawQuery("SELECT club_name, short_title, short_introduction, photo_path FROM tb_club", null)
+        val cursor = db.readableDatabase.rawQuery(
+            """
+        SELECT c.club_name, c.short_title, c.short_introduction, c.photo_path,
+               (SELECT COUNT(*) FROM tb_application a WHERE a.club_name = c.club_name) AS participant_count,
+               (SELECT COUNT(DISTINCT l.id) FROM tb_like l WHERE l.club_name = c.club_name) AS like_count
+        FROM tb_club c
+        ORDER BY like_count DESC
+        """.trimIndent(), null
+        )
 
         while (cursor.moveToNext()) {
             val clubName = cursor.getString(0)
             val title = cursor.getString(1)
             val description = cursor.getString(2)
             val imagePath = cursor.getString(3) ?: ""
+            val participantCount = cursor.getInt(4)
 
-            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: 6", clubName = clubName))
+            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: $participantCount", clubName = clubName))
         }
 
         cursor.close()
@@ -268,15 +252,22 @@ class MainActivity : AppCompatActivity() {
     private fun getNewMeetingsData(db: DatabaseHelper): List<ActivityItem> {
         val list = mutableListOf<ActivityItem>()
         val cursor = db.readableDatabase.rawQuery(
-            "SELECT club_name, short_title, short_introduction, photo_path FROM tb_club ORDER BY rowid DESC LIMIT 4", null)
+            """
+        SELECT c.club_name, c.short_title, c.short_introduction, c.photo_path,
+               (SELECT COUNT(*) FROM tb_application a WHERE a.club_name = c.club_name) AS participant_count
+        FROM tb_club c
+        ORDER BY rowid DESC LIMIT 4
+        """.trimIndent(), null
+        )
 
         while (cursor.moveToNext()) {
             val clubName = cursor.getString(0)
             val title = cursor.getString(1)
             val description = cursor.getString(2)
             val imagePath = cursor.getString(3) ?: ""
+            val participantCount = cursor.getInt(4)
 
-            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: 6", clubName = clubName))
+            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: $participantCount", clubName = clubName))
         }
 
         cursor.close()
@@ -329,22 +320,25 @@ class MainActivity : AppCompatActivity() {
         return hostList
     }
 
-    private fun getHighRunnerData(db: DatabaseHelper): InsertClubExample.ClubData? {
+    private fun getHighRunnerData(db: DatabaseHelper): Pair<InsertClubExample.ClubData?, Int> {
         val cursor = db.readableDatabase.rawQuery(
             """
-        SELECT club_name, short_title, short_introduction, photo_path
-        FROM tb_club
-        WHERE club_name = 'High Runner'
+        SELECT c.club_name, c.short_title, c.short_introduction, c.photo_path,
+               (SELECT COUNT(DISTINCT a.id) FROM tb_application a WHERE a.club_name = c.club_name) 
+        FROM tb_club c
+        WHERE c.club_name = 'High Runner'
         """.trimIndent(), null
         )
 
         var clubData: InsertClubExample.ClubData? = null
+        var participantCount = 0
 
         if (cursor.moveToFirst()) {
             val clubName = cursor.getString(0)
             val shortTitle = cursor.getString(1)
             val shortIntroduction = cursor.getString(2)
             val photoPath = cursor.getString(3) ?: ""
+            participantCount = cursor.getInt(4)
 
             clubData = InsertClubExample.ClubData(
                 clubName = clubName,
@@ -354,19 +348,22 @@ class MainActivity : AppCompatActivity() {
             )
         }
         cursor.close()
-        return clubData
+        return Pair(clubData, participantCount)
     }
 
     private fun applyHighRunnerData(db: DatabaseHelper) {
-        val clubData = getHighRunnerData(db)
+        val (clubData, participantCount) = getHighRunnerData(db)
 
         if (clubData != null) {
             val marathonTitle = findViewById<TextView>(R.id.marathonTitle)
             val marathonDescription = findViewById<TextView>(R.id.marathonDescription)
             val marathonImage = findViewById<ImageView>(R.id.marathonImage)
+            val ratingMarathon = findViewById<TextView>(R.id.ratingMarathon)
 
             marathonTitle.text = clubData.shortTitle
             marathonDescription.text = clubData.shortIntroduction
+
+            ratingMarathon.text = "현재 인원: $participantCount"
 
             // Glide를 사용하여 이미지 로드
             if (!clubData.photoPath.isNullOrEmpty()) {
@@ -388,26 +385,51 @@ class MainActivity : AppCompatActivity() {
 
     // 마감 임박 데이터 함수 추가
     private fun getDeadlineData(db: DatabaseHelper): List<ActivityItem> {
-        return getActivityData(db) // 신규 모임도 동일한 데이터 사용
+        val list = mutableListOf<ActivityItem>()
+        val cursor = db.readableDatabase.rawQuery(
+            """
+        SELECT c.club_name, c.short_title, c.short_introduction, c.photo_path,
+               (SELECT COUNT(*) FROM tb_application a WHERE a.club_name = c.club_name) AS participant_count
+        FROM tb_club c
+        ORDER BY participant_count DESC
+        """.trimIndent(), null
+        )
+
+        while (cursor.moveToNext()) {
+            val clubName = cursor.getString(0)
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+            val imagePath = cursor.getString(3) ?: ""
+            val participantCount = cursor.getInt(4)
+
+            list.add(ActivityItem(image = imagePath, title = title, description = description, rating = "현재 인원: $participantCount", clubName = clubName))
+        }
+
+        cursor.close()
+        return list
     }
 
     private fun getRecommendedData(db: DatabaseHelper): List<RecommendedItem> {
+        val userId = SharedPreferencesHelper.getUserId(this) ?: return emptyList()
         val list = mutableListOf<RecommendedItem>()
+
         val cursor = db.readableDatabase.rawQuery(
             """
-        SELECT club_name, short_introduction, photo_path 
-        FROM tb_club 
-        ORDER BY rowid DESC 
-        LIMIT 8 OFFSET 1
-        """.trimIndent(), null
+            SELECT club_name, short_introduction, photo_path,
+            (SELECT COUNT(*) FROM tb_like WHERE tb_like.id = ? AND tb_like.club_name = tb_club.club_name) AS is_favorite
+            FROM tb_club 
+            ORDER BY rowid DESC 
+            LIMIT 8 OFFSET 1
+            """.trimIndent(), arrayOf(userId)
         )
 
         while (cursor.moveToNext()) {
             val title = cursor.getString(0)
             val subtitle = cursor.getString(1)
             val imagePath = cursor.getString(2) ?: ""
+            val isFavorite = cursor.getInt(3) > 0 // 1이면 true, 0이면 false
 
-            list.add(RecommendedItem(image = imagePath, title = title, subtitle = subtitle))
+            list.add(RecommendedItem(image = imagePath, title = title, subtitle = subtitle, isFavorite = isFavorite))
         }
 
         cursor.close()

@@ -19,6 +19,7 @@ import android.os.Handler
 import android.view.WindowInsetsController
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlinx.coroutines.*
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
@@ -80,39 +81,44 @@ class SignupActivity : AppCompatActivity() {
 
         // 회원가입 버튼 클릭 리스너 설정
         signUpButton.setOnClickListener {
-            if (allFieldsFilled()) {
-                val userId = idInput.text.toString()
-
-                // 아이디 중복 체크
-                if (dbHelper.isIdExists(userId)) {
-                    showErrorMessage("이미 존재하는 아이디입니다.")
-                    return@setOnClickListener
-                }
-
-                try {
-                    // 데이터베이스에 사용자 정보 저장
-                    val result = dbHelper.addUser(
-                        userId,
-                        passwordInput.text.toString(),
-                        nameInput.text.toString(),
-                        birthdayInput.text.toString(),
-                        contactInput.text.toString(),
-                        schoolInput.text.toString(),
-                        majorInput.text.toString()
-                    )
-
-                    if (result != -1L) {
-                        // 회원가입 완료 다이얼로그 표시
-                        showSignupCompletedDialog()
-                    } else {
-                        // 데이터베이스 저장 실패
-                        showErrorMessage("회원가입에 실패했습니다. 다시 시도해주세요.")
-                    }
-                } catch (e: Exception) {
-                    showErrorMessage("데이터베이스 오류가 발생했습니다: ${e.message}")
-                }
-            } else {
+            if (!allFieldsFilled()) {
                 showErrorMessage()
+                return@setOnClickListener
+            }
+
+            val userId = idInput.text.toString()
+
+            // ✅ 비동기 처리 (Coroutine 사용)
+            GlobalScope.launch(Dispatchers.IO) {
+                val isIdTaken = dbHelper.isIdExists(userId)
+
+                withContext(Dispatchers.Main) {
+                    if (isIdTaken) {
+                        showErrorMessage("이미 존재하는 아이디입니다.")
+                        return@withContext
+                    }
+
+                    // ✅ 회원가입 시도 (비동기 처리)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val result = dbHelper.addUser(
+                            userId,
+                            passwordInput.text.toString(),
+                            nameInput.text.toString(),
+                            birthdayInput.text.toString(),
+                            contactInput.text.toString(),
+                            schoolInput.text.toString(),
+                            majorInput.text.toString()
+                        )
+
+                        withContext(Dispatchers.Main) {
+                            if (result != -1L) {
+                                showSignupCompletedDialog()
+                            } else {
+                                showErrorMessage("회원가입에 실패했습니다. 다시 시도해주세요.")
+                            }
+                        }
+                    }
+                }
             }
         }
 

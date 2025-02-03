@@ -20,6 +20,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.example.githubexamplea.R
+import com.example.githubexamplea.database.DatabaseHelper
+import com.example.githubexamplea.utils.SharedPreferencesHelper
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
@@ -30,6 +32,8 @@ import java.util.Locale
 class CalendarActivity : AppCompatActivity() {
     private var selectedDate: String? = null
     private var selectedTime: String? = null
+    private lateinit var location: String
+    private lateinit var needs: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,14 +62,12 @@ class CalendarActivity : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.ic_arrow_back) // 커스텀 아이콘 적용
         }
 
-        //달력
-        //val tvDate = findViewById<TextView>(R.id.tvDate)
-        val calendarView = findViewById<MaterialCalendarView>(R.id.calendarView)
+        val clubName = intent.getStringExtra("club_name") ?: "모임 이름 없음"
+        location = intent.getStringExtra("location") ?: "장소 정보 없음"
+        needs = intent.getStringExtra("needs") ?: "준비물 정보 없음"
 
-        // 현재 날짜를 "yyyy.MM" 형식으로 표시
-        //val currentDate = Calendar.getInstance().time
-        //val dateFormat = SimpleDateFormat("yyyy.MM", Locale.getDefault())
-        //tvDate.text = dateFormat.format(currentDate)
+        //달력
+        val calendarView = findViewById<MaterialCalendarView>(R.id.calendarView)
 
         // 공휴일 및 토요일 색상 적용
         calendarView.addDecorators(
@@ -82,7 +84,7 @@ class CalendarActivity : AppCompatActivity() {
 
         // 날짜 선택 리스너 추가
         calendarView.setOnDateChangedListener { _, date, _ ->
-            // 선택한 날짜를 "yyyy-MM-dd" 형식으로 저장
+            // 선택한 날짜를 "yyyy.MM.dd" 형식으로 저장
             selectedDate = "${date.year}.${String.format("%02d", date.month)}.${String.format("%02d", date.day)}"
         }
 
@@ -128,13 +130,42 @@ class CalendarActivity : AppCompatActivity() {
             if (selectedDate == null || selectedTime == null) {
                 Toast.makeText(this, "날짜와 시간을 모두 선택해 주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                val intent = Intent(this, CompleteActivity::class.java)
-                intent.putExtra("SELECTED_DATE", selectedDate)
-                intent.putExtra("SELECTED_TIME", selectedTime)
-                intent.putExtra("TITLE", "신청하기")  // "신청하기" 값을 전달
-                startActivity(intent)
+                saveApplicationData() // ✅ DB에 신청 데이터 저장
             }
         }
+    }
+
+    private fun saveApplicationData() {
+        val dbHelper = DatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+
+        val userId = SharedPreferencesHelper.getUserId(this) // ✅ 현재 로그인한 유저 ID 가져오기
+        val clubName = intent.getStringExtra("club_name") ?: "모임 정보 없음"
+
+        val insertQuery = """
+            INSERT OR IGNORE INTO tb_application (id, club_name, date, time)
+            VALUES (?, ?, ?, ?)
+        """.trimIndent()
+
+        val statement = db.compileStatement(insertQuery)
+        statement.bindString(1, userId)
+        statement.bindString(2, clubName)
+        statement.bindString(3, selectedDate!!)
+        statement.bindString(4, selectedTime!!)
+
+        statement.executeInsert()
+        db.close()
+
+        val intent = Intent(this, CompleteActivity::class.java).apply {
+            putExtra("SELECTED_DATE", selectedDate)
+            putExtra("SELECTED_TIME", selectedTime)
+            putExtra("TITLE", "신청하기")
+            putExtra("club_name", clubName)
+            putExtra("location", location)
+            putExtra("needs", needs)
+        }
+        startActivity(intent)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

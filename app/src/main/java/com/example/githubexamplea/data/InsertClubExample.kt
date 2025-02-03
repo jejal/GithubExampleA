@@ -1,17 +1,17 @@
 package com.example.githubexamplea.data
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.githubexamplea.dao.ClubDao
 import com.example.githubexamplea.dao.ClubDetailsDao
-import com.example.githubexamplea.database.DatabaseHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
-class InsertClubExample(private val context: Context) {
-    fun insertClubsWithDetails() {
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+class InsertClubExample(private val db: SQLiteDatabase, private val context: Context) {
 
+    suspend fun insertClubsWithDetails() {
         val clubDao = ClubDao(db)
         val clubDetailsDao = ClubDetailsDao(db)
 
@@ -124,56 +124,58 @@ class InsertClubExample(private val context: Context) {
             )
         )
 
-        db.beginTransaction()
-        try {
-            for (club in clubs) {
-                // tb_club에 데이터 삽입
-                clubDao.insertClub(
-                    club.clubName,
-                    club.shortTitle,
-                    club.shortIntroduction,
-                    club.date,
-                    club.time,
-                    club.location,
-                    club.needs,
-                    club.cost,
-                    club.photoPath
-                )
-
-                // details가 null이 아닐 경우에만 tb_club_details에 삽입
-                club.details?.let {
-                    clubDetailsDao.insertClubDetails(
+        withContext(Dispatchers.IO) { // 🔹 백그라운드에서 실행
+            try {
+                for (club in clubs) {
+                    // tb_club 데이터 삽입
+                    clubDao.insertClub(
                         club.clubName,
-                        it.clubIntroduction,
-                        it.program_1,
-                        it.program_2,
-                        it.program_3
+                        club.shortTitle,
+                        club.shortIntroduction,
+                        club.date,
+                        club.time,
+                        club.location,
+                        club.needs,
+                        club.cost,
+                        club.photoPath
                     )
+
+                    // tb_club_details 데이터 삽입
+                    club.details?.let {
+                        clubDetailsDao.insertClubDetails(
+                            club.clubName,
+                            it.clubIntroduction,
+                            it.program_1,
+                            it.program_2,
+                            it.program_3
+                        )
+                    }
                 }
+                Log.d("DB_INSERT", "클럽 및 상세 데이터 삽입 성공 ✅")
+            } catch (e: Exception) {
+                Log.e("DB_INSERT", "클럽 데이터 삽입 중 오류 발생: ${e.message}")
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-            db.close()
         }
     }
 
-    private fun copyImageToInternalStorage(context: Context, fileName: String): String {
-        val directory = File(context.filesDir, "club_images") // 내부 저장소 경로 설정
-        if (!directory.exists()) directory.mkdirs() // 디렉토리 없으면 생성
+    private suspend fun copyImageToInternalStorage(context: Context, fileName: String): String {
+        return withContext(Dispatchers.IO) { // 🔹 IO 스레드에서 실행 (비동기 최적화)
+            val directory = File(context.filesDir, "club_images")
+            if (!directory.exists()) directory.mkdirs() // 디렉토리 생성
 
-        val file = File(directory, fileName)
+            val file = File(directory, fileName)
 
-        return try {
-            val inputStream = context.assets.open("images/$fileName") // assets에서 파일 가져오기
-            file.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream) // 파일 복사
+            return@withContext try {
+                val inputStream = context.assets.open("images/$fileName")
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+                Log.d("FileCopyDebug", "클럽 이미지 복사 성공: ${file.absolutePath}")
+                file.absolutePath
+            } catch (e: Exception) {
+                Log.e("FileCopyDebug", "클럽 이미지 복사 실패: ${e.message}")
+                ""
             }
-            Log.d("FileCopyDebug", "클럽 이미지 복사 성공: ${file.absolutePath}")
-            file.absolutePath
-        } catch (e: Exception) {
-            Log.e("FileCopyDebug", "클럽 이미지 복사 실패: ${e.message}")
-            ""
         }
     }
 
