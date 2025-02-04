@@ -4,20 +4,29 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.example.githubexamplea.api.OpenWeatherApiClient
+import com.example.githubexamplea.api.model.ForecastItem
 import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.utils.SharedPreferencesHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class MeetingActivity : AppCompatActivity() {
@@ -87,6 +96,10 @@ class MeetingActivity : AppCompatActivity() {
         val image2TitleView = findViewById<TextView>(R.id.image2_title)
         val image2IntroView = findViewById<TextView>(R.id.image2_intro)
         val peopleCount2 = findViewById<TextView>(R.id.people_count2)
+
+        // 날씨 컨테이너
+        val weatherContainer = findViewById<LinearLayout>(R.id.weather_forecast_container)
+        fetchWeatherForecast(weatherContainer)
 
         // FAQ 초기화 (중복 방지)
         question1.text = ""
@@ -474,6 +487,89 @@ class MeetingActivity : AppCompatActivity() {
         // 🔹 UI 업데이트
         participantsTextView.text = "${participantCount}명 신청"
     }
+
+    // 날씨 API 호출
+    private fun fetchWeatherForecast(weatherContainer: LinearLayout) {
+        val apiKey = BuildConfig.OPENWEATHER_API_KEY
+        val cityName = "Seoul"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val apiResponse = OpenWeatherApiClient.service.getWeatherForecast(cityName, apiKey)
+
+                if (!apiResponse.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MeetingActivity, "API 요청 실패 (Error: ${apiResponse.code()})", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                val forecastData = apiResponse.body()
+                if (forecastData != null) {
+                    val forecastList = forecastData.list
+
+                    val dailyForecastMap = mutableMapOf<String, ForecastItem>()
+                    for (item in forecastList) {
+                        val date = item.dateTime.split(" ")[0]  // YYYY-MM-DD 형식
+                        dailyForecastMap[date] = item
+                    }
+
+                    val sortedKeys = dailyForecastMap.keys.sorted().take(4)
+
+                    val daysLabel = listOf("오늘", "내일", "모레", "글피")
+
+                    withContext(Dispatchers.Main) {
+                        weatherContainer.removeAllViews()
+
+                        for ((index, date) in sortedKeys.withIndex()) {
+                            val forecast = dailyForecastMap[date] ?: continue
+
+                            val forecastView = LayoutInflater.from(this@MeetingActivity)
+                                .inflate(R.layout.item_weather_forecast, weatherContainer, false)
+
+                            val weatherIcon = forecastView.findViewById<ImageView>(R.id.weather_icon)
+                            val weatherDay = forecastView.findViewById<TextView>(R.id.weather_day)
+                            val weatherDate = forecastView.findViewById<TextView>(R.id.weather_date)
+                            val weatherTemp = forecastView.findViewById<TextView>(R.id.weather_temp)
+                            val weatherFeelsLike = forecastView.findViewById<TextView>(R.id.weather_feels_like)
+                            val weatherWind = forecastView.findViewById<TextView>(R.id.weather_wind)
+                            val weatherHumidity = forecastView.findViewById<TextView>(R.id.weather_humidity)
+
+                            val dateParts = date.split("-")
+                            val formattedDate = "${dateParts[1]}.${dateParts[2]}" // MM.DD 형식 변환
+
+                            weatherDay.text = daysLabel[index]  // 오늘, 내일, 모레, 글피
+                            weatherDate.text = formattedDate
+
+                            weatherTemp.text = "${forecast.main.temperature}°C"
+                            weatherFeelsLike.text = "${forecast.main.feelsLike}°C"
+                            weatherWind.text = "${forecast.wind.speed} m/s"
+                            weatherHumidity.text = "${forecast.main.humidity}%"
+
+                            val weatherDesc = forecast.weather[0].description
+                            val iconRes = when (weatherDesc) {
+                                "맑음" -> R.drawable.ic_sun
+                                "구름조금", "구름많음" -> R.drawable.ic_cloud
+                                "흐림", "매우흐림" -> R.drawable.ic_cloud2
+                                "비", "약한비", "강한비", "매우강한비", "극심한비", "소나기", "이슬비", "약한이슬비", "강한이슬비" -> R.drawable.ic_rain
+                                "약한눈", "눈", "강한눈", "진눈깨비", "약한진눈깨비", "강한진눈깨비", "소나기눈" -> R.drawable.ic_snow
+                                else -> R.drawable.ic_cloud2
+                            }
+                            weatherIcon.setImageResource(iconRes)
+
+                            weatherContainer.addView(forecastView)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MeetingActivity, "날씨 정보 불러오기 실패", Toast.LENGTH_SHORT).show()
+                }
+                e.printStackTrace()
+            }
+        }
+    }
+
 
     private fun applyWindowInsetsToRootView() {
         val rootView = findViewById<View>(android.R.id.content) // 최상위 레이아웃 가져오기
