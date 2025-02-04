@@ -13,6 +13,7 @@ class InsertFaqExample(private val db: SQLiteDatabase) {
     suspend fun insertSampleFaqs() {
         val faqDao = FaqDao(db)
 
+        // 초기 faq 데이터
         val faqs = listOf(
             FaqData("uuu", "Kicks & Dreams", "축구를 처음 해봐도 괜찮을까요?", "물론입니다! 초보자를 위한 기본 트레이닝이 준비되어 있습니다.", getCurrentTime(), getCurrentDate()),
             FaqData("jun", "Kicks & Dreams", "참가비 외에 추가 비용이 있나요?", "추가 비용은 없으며, 개인 준비물만 챙겨주시면 됩니다.", getCurrentTime(), getCurrentDate()),
@@ -24,6 +25,7 @@ class InsertFaqExample(private val db: SQLiteDatabase) {
             FaqData("lee", "Breathe", "몸이 뻣뻣한 사람도 참여할 수 있나요?", "요가는 유연성이 아니라 지속적인 연습을 통해 몸의 균형을 찾는 활동입니다. 누구나 가능해요!", getCurrentTime(), getCurrentDate())
         )
 
+        // 코루틴을 사용하여 I/O 작업 (데이터베이스 작업) 실행
         withContext(Dispatchers.IO) {
             for (faq in faqs) {
                 faqDao.insertFaq(

@@ -13,6 +13,7 @@ class InsertReviewExample(private val db: SQLiteDatabase) {
     suspend fun insertSampleReviews() {
         val reviewDao = ReviewDao(db)
 
+        // 초기 리뷰 데이터
         val reviews = listOf(
             ReviewData(
                 userId = "uuu",

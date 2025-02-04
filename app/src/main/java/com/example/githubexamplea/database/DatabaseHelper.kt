@@ -54,7 +54,7 @@ class DatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, D
         val isDatabaseInitialized = sharedPreferences.getBoolean("isDatabaseInitialized", false)
 
         if (!isDatabaseInitialized) {
-            // 🔹 CoroutineScope을 사용해서 비동기 실행
+            // CoroutineScope을 사용해서 비동기 실행
             CoroutineScope(Dispatchers.IO).launch {
                 insertInitialData(db, context)
 
@@ -193,14 +193,14 @@ class DatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, D
         Log.d(TAG, "초기 데이터 삽입 시작")
 
         try {
-            withContext(Dispatchers.IO) {  // 🔹 IO 스레드에서 실행 (DB 최적화)
+            withContext(Dispatchers.IO) {  // IO 스레드에서 실행 (DB 최적화)
                 InsertUserExample(db).insertMultipleUsers()
                 InsertLikeExample(db).insertLikes()
                 InsertApplicationExample(db).insertSampleApplications()
                 InsertReviewExample(db).insertSampleReviews()
                 InsertFaqExample(db).insertSampleFaqs()
 
-                // 🆕 추가할 부분: tb_leader와 tb_club 데이터도 함께 삽입!
+                // 추가할 부분: tb_leader와 tb_club 데이터도 함께 삽입!
                 InsertLeaderExample(db, context).insertLeaders()
                 InsertClubExample(db, context).insertClubsWithDetails()
             }
@@ -211,7 +211,7 @@ class DatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, D
         Log.d(TAG, "초기 데이터 삽입 완료")
     }
 
-    // ✅ 안전한 사용자 인증 (Coroutine + Retry 적용)
+    // 안전한 사용자 인증 (Coroutine + Retry 적용)
     suspend fun validateUser(id: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             var attempt = 0
@@ -232,18 +232,18 @@ class DatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, D
 
                     val isValid = cursor.count > 0
                     cursor.close()
-                    return@withContext isValid  // ✅ 성공하면 즉시 반환
+                    return@withContext isValid  // 성공하면 즉시 반환
 
                 } catch (e: Exception) {
                     attempt++
-                    delay(200L)  // 🔥 200ms 대기 후 재시도
+                    delay(200L)  // 200ms 대기 후 재시도
                 }
             }
-            false  // 🔴 5번 재시도 후에도 실패하면 false 반환
+            false  // 5번 재시도 후에도 실패하면 false 반환
         }
     }
 
-    // ✅ 사용자 정보 가져오기
+    // 사용자 정보 가져오기
     suspend fun getUserName(id: String): String {
         return withContext(Dispatchers.IO) {
             val db = readableDatabase

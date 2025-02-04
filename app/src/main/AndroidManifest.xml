@@ -40,6 +40,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
+            <!-- 앱이 실행될 때 가장 먼저 실행되는 액티비티 지정 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -43,13 +43,14 @@ class ActivityAdapter(
             descriptionText.text = item.description
             ratingText.text = item.rating
 
+            // 이미지 파일 경로 확인 후 Glide로 로드
             if (!item.image.isNullOrEmpty()) {
                 val file = File(item.image)
                 if (file.exists()) {
                     Log.d("GlideDebug", "파일 존재 확인됨: ${item.image}")
 
                     Glide.with(itemView.context)
-                        .load(Uri.fromFile(file)) // ✅ 내부 저장소 파일을 로드
+                        .load(Uri.fromFile(file)) // 내부 저장소 파일을 로드
                         .placeholder(R.drawable.img_banner_1) // 로딩 중 표시할 이미지
                         .error(R.drawable.sorbet) // 오류 발생 시 기본 이미지
                         .into(imageView)
@@ -71,6 +72,7 @@ class ActivityAdapter(
     }
 }
 
+// RecyclerView의 데이터 변경을 효율적으로 처리하기 위한 DiffUtil 콜백
 class ActivityDiffCallback : DiffUtil.ItemCallback<ActivityItem>() {
     override fun areItemsTheSame(oldItem: ActivityItem, newItem: ActivityItem): Boolean {
         return oldItem.title == newItem.title

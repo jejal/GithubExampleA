@@ -2,16 +2,13 @@ package com.example.githubexamplea
 
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,15 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.example.githubexamplea.R
 import com.example.githubexamplea.database.DatabaseHelper
 import com.example.githubexamplea.utils.SharedPreferencesHelper
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class CalendarActivity : AppCompatActivity() {
     private var selectedDate: String? = null
@@ -66,7 +60,7 @@ class CalendarActivity : AppCompatActivity() {
         location = intent.getStringExtra("location") ?: "장소 정보 없음"
         needs = intent.getStringExtra("needs") ?: "준비물 정보 없음"
 
-        //달력
+        // 달력
         val calendarView = findViewById<MaterialCalendarView>(R.id.calendarView)
 
         // 공휴일 및 토요일 색상 적용
@@ -130,7 +124,7 @@ class CalendarActivity : AppCompatActivity() {
             if (selectedDate == null || selectedTime == null) {
                 Toast.makeText(this, "날짜와 시간을 모두 선택해 주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                saveApplicationData() // ✅ DB에 신청 데이터 저장
+                saveApplicationData() // DB에 신청 데이터 저장
             }
         }
     }
@@ -139,7 +133,7 @@ class CalendarActivity : AppCompatActivity() {
         val dbHelper = DatabaseHelper(this)
         val db = dbHelper.writableDatabase
 
-        val userId = SharedPreferencesHelper.getUserId(this) // ✅ 현재 로그인한 유저 ID 가져오기
+        val userId = SharedPreferencesHelper.getUserId(this) // 현재 로그인한 유저 ID 가져오기
         val clubName = intent.getStringExtra("club_name") ?: "모임 정보 없음"
 
         val insertQuery = """

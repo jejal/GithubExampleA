@@ -356,7 +356,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-
             <!-- 마감 임박 섹션 -->
             <TextView
                 android:layout_width="wrap_content"

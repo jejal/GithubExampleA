@@ -1,7 +1,6 @@
 package com.example.githubexamplea.adapter
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +53,7 @@ class MeetingAdapter(
         // 아이콘을 "신청 취소"로 변경
         holder.cancelIcon.setImageResource(R.drawable.ic_cancel)
 
-        // ❌ 신청 취소 버튼 (ic_cancel 아이콘)
+        // 신청 취소 버튼 (ic_cancel 아이콘)
         holder.cancelIcon.setOnClickListener {
             removeItem(position, meeting)
         }
@@ -71,7 +70,7 @@ class MeetingAdapter(
         val meetingTime: TextView = itemView.findViewById(R.id.meetingTime)
     }
 
-    // 🔹 아이템 삭제 함수 (DB와 UI 반영)
+    // 아이템 삭제 함수 (DB와 UI 반영)
     private fun removeItem(position: Int, meeting: MeetingItem) {
         val dbHelper = DatabaseHelper(context)
         val db = dbHelper.writableDatabase

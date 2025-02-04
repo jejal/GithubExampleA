@@ -15,6 +15,7 @@ class InsertClubExample(private val db: SQLiteDatabase, private val context: Con
         val clubDao = ClubDao(db)
         val clubDetailsDao = ClubDetailsDao(db)
 
+        // 초기 모임 데이터
         val clubs = listOf(
             ClubData(
                 clubName = "Kicks & Dreams",
@@ -124,7 +125,7 @@ class InsertClubExample(private val db: SQLiteDatabase, private val context: Con
             )
         )
 
-        withContext(Dispatchers.IO) { // 🔹 백그라운드에서 실행
+        withContext(Dispatchers.IO) { // 백그라운드에서 실행
             try {
                 for (club in clubs) {
                     // tb_club 데이터 삽입
@@ -159,7 +160,7 @@ class InsertClubExample(private val db: SQLiteDatabase, private val context: Con
     }
 
     private suspend fun copyImageToInternalStorage(context: Context, fileName: String): String {
-        return withContext(Dispatchers.IO) { // 🔹 IO 스레드에서 실행 (비동기 최적화)
+        return withContext(Dispatchers.IO) { // IO 스레드에서 실행 (비동기 최적화)
             val directory = File(context.filesDir, "club_images")
             if (!directory.exists()) directory.mkdirs() // 디렉토리 생성
 

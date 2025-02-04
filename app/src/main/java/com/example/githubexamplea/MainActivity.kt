@@ -5,13 +5,9 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.WindowInsetsController
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -223,6 +219,7 @@ class MainActivity : AppCompatActivity() {
         applyHighRunnerData(dbHelper)
     }
 
+    // 핫한 액티비티
     private fun getActivityData(db: DatabaseHelper): List<ActivityItem> {
         val list = mutableListOf<ActivityItem>()
         val cursor = db.readableDatabase.rawQuery(
@@ -249,6 +246,7 @@ class MainActivity : AppCompatActivity() {
         return list
     }
 
+    // 신규 모임
     private fun getNewMeetingsData(db: DatabaseHelper): List<ActivityItem> {
         val list = mutableListOf<ActivityItem>()
         val cursor = db.readableDatabase.rawQuery(
@@ -274,6 +272,7 @@ class MainActivity : AppCompatActivity() {
         return list
     }
 
+    // 모임장 정보
     private fun getHostData(db: DatabaseHelper): List<HostItem> {
         val dbInstance = db.readableDatabase
         val hostList = mutableListOf<HostItem>()
@@ -320,6 +319,7 @@ class MainActivity : AppCompatActivity() {
         return hostList
     }
 
+    // 마라톤
     private fun getHighRunnerData(db: DatabaseHelper): Pair<InsertClubExample.ClubData?, Int> {
         val cursor = db.readableDatabase.rawQuery(
             """
@@ -383,7 +383,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 마감 임박 데이터 함수 추가
+    // 마감 임박 액티비티
     private fun getDeadlineData(db: DatabaseHelper): List<ActivityItem> {
         val list = mutableListOf<ActivityItem>()
         val cursor = db.readableDatabase.rawQuery(
@@ -409,6 +409,7 @@ class MainActivity : AppCompatActivity() {
         return list
     }
 
+    // 추천 모임
     private fun getRecommendedData(db: DatabaseHelper): List<RecommendedItem> {
         val userId = SharedPreferencesHelper.getUserId(this) ?: return emptyList()
         val list = mutableListOf<RecommendedItem>()

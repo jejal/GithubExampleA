@@ -10,6 +10,7 @@ class InsertApplicationExample(private val db: SQLiteDatabase) {
     suspend fun insertSampleApplications() {
         val applicationDao = ApplicationDao(db)
 
+        // 초기 신청 데이터
         val applications = listOf(
             ApplicationData(
                 userId = "lee",

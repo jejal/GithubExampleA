@@ -13,7 +13,7 @@ class LeaderDao(private val db: SQLiteDatabase) {
         leaderIntroduction: String,
         clubIntroduction: String,
         leaderCareer: String?,
-        leaderPhotoPath: String? // 추가된 매개변수
+        leaderPhotoPath: String?
     ): Long {
         db.beginTransaction()
         return try {

@@ -140,6 +140,7 @@ class MeetingActivity : AppCompatActivity() {
         // 해당 클럽 신청 인원수 불러오기
         updateParticipantCount(clubName)
 
+        // 모임 정보
         val cursor = db.rawQuery(
             """
             SELECT date, time, location, needs, cost
@@ -182,6 +183,7 @@ class MeetingActivity : AppCompatActivity() {
         }
         introCursor.close()
 
+        // 모임 디테일 정보
         val detailsCursor = db.rawQuery(
             """
         SELECT club_introduction, program_1, program_2, program_3
@@ -228,6 +230,7 @@ class MeetingActivity : AppCompatActivity() {
         }
         detailsCursor.close()
 
+        // 모임 faq
         val faqCursor = db.rawQuery(
             """
         SELECT DISTINCT question, answer
@@ -268,6 +271,7 @@ class MeetingActivity : AppCompatActivity() {
             }
         }
 
+        // 모임 리뷰
         val reviewCursor = db.rawQuery(
             """
         SELECT review
@@ -290,6 +294,7 @@ class MeetingActivity : AppCompatActivity() {
         if (reviewList.size > 1) review2.text = reviewList[1]
         if (reviewList.size > 2) review3.text = reviewList[2]
 
+        // 모임장 소개
         val hostCursor = db.rawQuery(
             """
         SELECT leader.id, leader.leader_introduction, leader.leader_photo_path, user.name
@@ -325,6 +330,7 @@ class MeetingActivity : AppCompatActivity() {
         }
         hostCursor.close()
 
+        // 유사한 모임
         val dbHelper2 = DatabaseHelper(this)
 
         val (runTitle, runIntro, runPhotoPath) = getClubData(dbHelper2, "Run & Run")
@@ -375,20 +381,20 @@ class MeetingActivity : AppCompatActivity() {
         // 찜하기 버튼 가져오기
         val btnFavorite = findViewById<ImageButton>(R.id.btn_favorite)
 
-        // ✅ 현재 사용자가 해당 클럽을 찜한 상태인지 조회
+        // 현재 사용자가 해당 클럽을 찜한 상태인지 조회
         isFavorite = checkFavoriteStatus(dbHelper, userId, clubName)
 
-        // ✅ 찜한 상태를 UI에 반영
+        // 찜한 상태를 UI에 반영
         btnFavorite.setImageResource(if (isFavorite) R.drawable.ic_like_red else R.drawable.ic_like_blank)
 
-        // 🔹 찜 버튼 클릭 이벤트
+        // 찜 버튼 클릭 이벤트
         btnFavorite.setOnClickListener {
             isFavorite = !isFavorite
 
-            // ✅ UI 업데이트
+            // UI 업데이트
             btnFavorite.setImageResource(if (isFavorite) R.drawable.ic_like_red else R.drawable.ic_like_blank)
 
-            // ✅ DB 업데이트 (찜 추가/삭제)
+            // DB 업데이트 (찜 추가/삭제)
             updateFavoriteState(dbHelper, userId, clubName, isFavorite)
         }
 
@@ -427,7 +433,7 @@ class MeetingActivity : AppCompatActivity() {
         }
     }
 
-    // ✅ 화면이 다시 보일 때 최신 신청 인원 업데이트
+    // 화면이 다시 보일 때 최신 신청 인원 업데이트
     override fun onResume() {
         super.onResume()
         val titleTextView = findViewById<TextView>(R.id.tv_event_title)
@@ -441,6 +447,7 @@ class MeetingActivity : AppCompatActivity() {
         return true
     }
 
+    // 찜하기 상태 체크
     private fun checkFavoriteStatus(dbHelper: DatabaseHelper, userId: String, clubName: String): Boolean {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery(
@@ -448,11 +455,12 @@ class MeetingActivity : AppCompatActivity() {
             arrayOf(userId, clubName)
         )
 
-        val isLiked = cursor.moveToFirst() // ✅ 값이 있으면 true (찜한 상태)
+        val isLiked = cursor.moveToFirst() // 값이 있으면 true (찜한 상태)
         cursor.close()
         return isLiked
     }
 
+    // 찜하기 상태 업데이트
     private fun updateFavoriteState(dbHelper: DatabaseHelper, userId: String, clubName: String, isLiked: Boolean) {
         val db = dbHelper.writableDatabase
         if (isLiked) {
@@ -462,6 +470,7 @@ class MeetingActivity : AppCompatActivity() {
         }
     }
 
+    // 신청 인원수 카운트
     private fun getParticipantCount(db: DatabaseHelper, clubName: String): Int {
         val cursor = db.readableDatabase.rawQuery(
             """
@@ -477,18 +486,19 @@ class MeetingActivity : AppCompatActivity() {
         return count
     }
 
+    // 신청 인원수 업데이트
     private fun updateParticipantCount(clubName: String) {
-        val dbHelper = DatabaseHelper(this) // 🔹 매번 새 DB 인스턴스 생성 (최신 데이터 반영)
+        val dbHelper = DatabaseHelper(this) // 매번 새 DB 인스턴스 생성 (최신 데이터 반영)
         val participantsTextView = findViewById<TextView>(R.id.tv_participants)
 
-        // 🔹 최신 신청 인원 가져오기
+        // 최신 신청 인원 가져오기
         val participantCount = getParticipantCount(dbHelper, clubName)
 
-        // 🔹 UI 업데이트
+        // UI 업데이트
         participantsTextView.text = "${participantCount}명 신청"
     }
 
-    // 날씨 API 호출
+    // OpenWeather 날씨 API 호출
     private fun fetchWeatherForecast(weatherContainer: LinearLayout) {
         val apiKey = BuildConfig.OPENWEATHER_API_KEY
         val cityName = "Seoul"
@@ -569,7 +579,6 @@ class MeetingActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun applyWindowInsetsToRootView() {
         val rootView = findViewById<View>(android.R.id.content) // 최상위 레이아웃 가져오기

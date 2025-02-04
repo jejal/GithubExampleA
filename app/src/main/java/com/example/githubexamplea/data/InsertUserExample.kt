@@ -10,7 +10,7 @@ class InsertUserExample(private val db: SQLiteDatabase) {
     suspend fun insertMultipleUsers() {
         val userDao = UserDao(db)
 
-        // 사람 정보 리스트에
+        // 초기 사용자 데이터
         val usersToInsert = listOf(
             // id, password, name, birthday, phone, university, major 순
             arrayOf("lee", "0000", "이언", "1990.09.01", "010-1234-5678", "서울여자대학교", "데이터사이언스학과"),
@@ -21,7 +21,7 @@ class InsertUserExample(private val db: SQLiteDatabase) {
             arrayOf("uuu", "5555", "성선우", "2000.11.28", "010-5555-5555", "건국대학교", "화학공학과")
         )
 
-        // 🔹 Coroutine 사용해서 DB 작업 실행 (I/O 스레드에서 실행)
+        // Coroutine 사용해서 DB 작업 실행 (I/O 스레드에서 실행)
         withContext(Dispatchers.IO) {
             for (userData in usersToInsert) {
                 userDao.addUser(

@@ -7,7 +7,7 @@ import kotlinx.coroutines.*
 
 class UserDao(private val db: SQLiteDatabase) {
 
-    // ✅ 사용자 추가 (INSERT) - Coroutine + Retry 적용
+    // 사용자 추가 (INSERT) - Coroutine + Retry 적용
     suspend fun addUser(
         id: String,
         password: String,
@@ -38,14 +38,14 @@ class UserDao(private val db: SQLiteDatabase) {
 
                 } catch (e: Exception) {
                     attempt++
-                    delay(200L)  // 🔥 200ms 대기 후 재시도
+                    delay(200L)  // 200ms 대기 후 재시도
                 }
             }
             -1L // 실패 시 -1 반환
         }
     }
 
-    // ✅ 사용자 조회 (SELECT) - Coroutine + Retry 적용
+    // 사용자 조회 (SELECT) - Coroutine + Retry 적용
     suspend fun getUserById(id: String): Map<String, String>? {
         return withContext(Dispatchers.IO) {
             var attempt = 0
@@ -77,14 +77,14 @@ class UserDao(private val db: SQLiteDatabase) {
 
                 } catch (e: Exception) {
                     attempt++
-                    delay(200L)  // 🔥 200ms 대기 후 재시도
+                    delay(200L)  // 200ms 대기 후 재시도
                 }
             }
             null // 실패 시 null 반환
         }
     }
 
-    // ✅ 사용자 업데이트 (UPDATE) - 기존 방식 유지
+    // 사용자 업데이트 (UPDATE)
     fun updateUser(
         id: String,
         newPassword: String,
@@ -110,7 +110,7 @@ class UserDao(private val db: SQLiteDatabase) {
         )
     }
 
-    // ✅ 사용자 삭제 (DELETE) - 기존 방식 유지
+    // 사용자 삭제 (DELETE)
     fun deleteUser(id: String): Int {
         return db.delete(
             DatabaseContract.UserTable.TABLE_NAME,

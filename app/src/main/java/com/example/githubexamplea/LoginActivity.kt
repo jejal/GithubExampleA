@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ 자동 로그인 체크 (로그인 정보가 저장되어 있으면 바로 MainActivity 실행)
+        // 자동 로그인 체크 (로그인 정보가 저장되어 있으면 바로 MainActivity 실행)
         if (SharedPreferencesHelper.isLoggedIn(this)) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -48,14 +48,14 @@ class LoginActivity : AppCompatActivity() {
             val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            // ✅ 입력값 검증
+            // 입력값 검증
             if (username.isEmpty() || password.isEmpty()) {
                 errorText.text = "아이디와 비밀번호를 입력해주세요."
                 errorText.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            // ✅ 비동기 로그인 (Coroutine 사용)
+            // 비동기 로그인 (Coroutine 사용)
             GlobalScope.launch(Dispatchers.IO) {
                 val isValid = dbHelper.validateUser(username, password)
 
@@ -63,11 +63,11 @@ class LoginActivity : AppCompatActivity() {
                     if (isValid) {
                         errorText.visibility = View.GONE
 
-                        // ✅ 사용자 이름 가져와서 SharedPreferences 저장
+                        // 사용자 이름 가져와서 SharedPreferences 저장
                         val userName = dbHelper.getUserName(username)
                         SharedPreferencesHelper.saveUserInfo(this@LoginActivity, username, userName)
 
-                        // ✅ MainActivity 실행
+                        // MainActivity 실행
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(intent)
                         finish()

@@ -154,7 +154,7 @@ class MyActivity : AppCompatActivity() {
         findViewById<RecyclerView>(R.id.rvAppliedMeetings).apply {
             layoutManager = LinearLayoutManager(this@MyActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = MeetingAdapter(this@MyActivity, appliedMeetingsList) {
-                updateClubCounts() // 🔹 신청 취소 시 숫자 즉시 업데이트
+                updateClubCounts() // 신청 취소 시 숫자 즉시 업데이트
             }
         }
 
@@ -162,11 +162,12 @@ class MyActivity : AppCompatActivity() {
         findViewById<RecyclerView>(R.id.rvFavoriteMeetings).apply {
             layoutManager = LinearLayoutManager(this@MyActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = FavoriteAdapter(favoriteMeetingsList, dbHelper, userId) {
-                updateClubCounts() // 🔹 찜 취소 시 숫자 즉시 업데이트
+                updateClubCounts() // 찜 취소 시 숫자 즉시 업데이트
             }
         }
     }
 
+    // 신청한 모임 목록
     private fun getAppliedMeetings(): List<MeetingItem> {
         val meetingList = mutableListOf<MeetingItem>()
         val dbHelper = DatabaseHelper(this)
@@ -196,6 +197,7 @@ class MyActivity : AppCompatActivity() {
         return meetingList
     }
 
+    // 찜한 모임 목록
     private fun getFavoriteMeetings(): List<MeetingItem> {
         val favoriteList = mutableListOf<MeetingItem>()
         val dbHelper = DatabaseHelper(this)
@@ -239,7 +241,7 @@ class MyActivity : AppCompatActivity() {
             val university = cursor.getString(0) ?: "대학 정보 없음"
             val major = cursor.getString(1) ?: "전공 정보 없음"
 
-            // 🔹 대학과 전공을 "대학교 / 전공" 형태로 표시 (슬래시 양옆 공백 유지)
+            // 대학과 전공을 "대학교 / 전공" 형태로 표시 (슬래시 양옆 공백 유지)
             textUnivMajor.text = "$university / $major"
         }
 

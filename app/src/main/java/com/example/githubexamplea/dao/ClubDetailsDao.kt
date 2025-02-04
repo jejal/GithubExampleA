@@ -25,5 +25,5 @@ class ClubDetailsDao(private val db: SQLiteDatabase) {
 
     }
 
-    // 기타 필요한 메서드 (조회/수정/삭제) 추가 가능
+    // 기타 필요한 메서드 (조회/수정/삭제) 추가
 }

@@ -88,7 +88,7 @@ class SignupActivity : AppCompatActivity() {
 
             val userId = idInput.text.toString()
 
-            // ✅ 비동기 처리 (Coroutine 사용)
+            // 비동기 처리 (Coroutine 사용)
             GlobalScope.launch(Dispatchers.IO) {
                 val isIdTaken = dbHelper.isIdExists(userId)
 
@@ -98,7 +98,7 @@ class SignupActivity : AppCompatActivity() {
                         return@withContext
                     }
 
-                    // ✅ 회원가입 시도 (비동기 처리)
+                    // 회원가입 시도 (비동기 처리)
                     GlobalScope.launch(Dispatchers.IO) {
                         val result = dbHelper.addUser(
                             userId,
