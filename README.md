@@ -24,6 +24,7 @@
   - 경기장의 잔디를 연상시키는 짙은 초록색 사용
 - **디자인 방향**
   - 깔끔한 UI와 볼드한 디자인으로 역동성 강조
+<img width="1594" alt="Image" src="https://github.com/user-attachments/assets/e90d2a33-472a-4729-83ab-cf1a85dde9f2" />
 
 <br>
 
